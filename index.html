@@ -6,6 +6,7 @@
     <title>AI QUANTUM PRO SIGNAL SCANNER</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -59,6 +60,42 @@
             background: #1f293d;
             border-radius: 3px;
         }
+
+        /* Advanced final signal animations */
+        @keyframes finalArrowPulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.18);
+                opacity: 0.72;
+            }
+        }
+
+        .final-arrow {
+            animation: finalArrowPulse 0.7s ease-in-out infinite;
+        }
+
+        @keyframes noTradePulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.08);
+                opacity: 0.65;
+            }
+        }
+
+        .no-trade-final {
+            animation: noTradePulse 0.8s ease-in-out infinite;
+        }
+
+        #countdownDisplay {
+            min-width: 70px;
+            min-height: 70px;
+        }
     </style>
 </head>
 
@@ -66,6 +103,7 @@
 
     <!-- Top Header Navigation -->
     <header class="w-full max-w-7xl mx-auto glass-panel rounded-2xl p-4 mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
+
         <div class="flex items-center space-x-3">
             <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center shadow-lg shadow-blue-500/30">
                 <i class="fa-solid fa-microchip text-2xl text-white"></i>
@@ -75,6 +113,7 @@
                 <h1 class="font-orbitron text-xl md:text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
                     QUANTUM AI PRO SCANNER
                 </h1>
+
                 <p class="text-xs text-gray-400">
                     Next-Level Institutional Expert Consensus Engine v7.0
                 </p>
@@ -91,10 +130,11 @@
         </div>
     </header>
 
+
     <!-- Main Workspace Container -->
     <main class="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
 
-        <!-- Left Column -->
+        <!-- Left Column: Control Panel -->
         <div class="glass-panel rounded-2xl p-6 flex flex-col justify-between space-y-6 lg:col-span-1">
 
             <div>
@@ -105,6 +145,7 @@
 
                 <div class="space-y-4">
 
+                    <!-- Broker -->
                     <div>
                         <label class="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">
                             Select Broker
@@ -120,6 +161,8 @@
                         </select>
                     </div>
 
+
+                    <!-- Category -->
                     <div>
                         <label class="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">
                             Market Category
@@ -129,14 +172,27 @@
                                 onchange="updatePairs()"
                                 class="w-full bg-[#121826] border border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-cyan-500 transition">
 
-                            <option value="otc" selected>OTC Markets (95% Payout)</option>
-                            <option value="forex">Live Currency Pairs</option>
-                            <option value="crypto">Cryptocurrencies</option>
-                            <option value="commodities">Commodities &amp; Metals</option>
+                            <option value="otc" selected>
+                                OTC Markets (95% Payout)
+                            </option>
+
+                            <option value="forex">
+                                Live Currency Pairs
+                            </option>
+
+                            <option value="crypto">
+                                Cryptocurrencies
+                            </option>
+
+                            <option value="commodities">
+                                Commodities &amp; Metals
+                            </option>
 
                         </select>
                     </div>
 
+
+                    <!-- Pair -->
                     <div>
                         <label class="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">
                             Asset Pair
@@ -144,9 +200,12 @@
 
                         <select id="pairSelect"
                                 class="w-full bg-[#121826] border border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-cyan-500 transition font-orbitron text-cyan-300">
+
                         </select>
                     </div>
 
+
+                    <!-- Timeframe -->
                     <div>
                         <label class="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">
                             Execution Timeframe
@@ -186,7 +245,10 @@
                 </div>
             </div>
 
-            <button onclick="startAdvancedAnalysis()"
+
+            <!-- MANUAL START ONLY -->
+            <button id="analyzeButton"
+                    onclick="startAdvancedAnalysis()"
                     class="w-full mt-6 py-4 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-orbitron font-black tracking-wider transition-all transform active:scale-95 shadow-lg shadow-cyan-500/25 flex items-center justify-center gap-3 text-base">
 
                 <i class="fa-solid fa-radar"></i>
@@ -195,6 +257,7 @@
             </button>
 
         </div>
+
 
         <!-- Right Column -->
         <div class="lg:col-span-2 flex flex-col gap-6">
@@ -228,13 +291,16 @@
 
             </div>
 
-            <!-- Result Box -->
+
+            <!-- Result Board -->
             <div id="resultBox"
                  class="glass-panel rounded-2xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden transition-all">
 
+                <!-- Header -->
                 <div class="flex flex-wrap justify-between items-center gap-4 mb-6 border-b border-white/10 pb-4">
 
                     <div class="flex items-center gap-3">
+
                         <span id="displayPair"
                               class="font-orbitron font-black text-lg text-white">
                             EUR/USD (OTC)
@@ -244,9 +310,11 @@
                               class="text-xs px-2.5 py-1 rounded-lg bg-white/10 text-white font-semibold">
                             Pocket Option
                         </span>
+
                     </div>
 
                     <div class="flex items-center gap-2">
+
                         <span class="text-xs text-gray-300">
                             Scan Matrix ID:
                         </span>
@@ -255,17 +323,22 @@
                               class="text-xs font-mono text-cyan-300 font-bold">
                             #QAI-8821
                         </span>
+
                     </div>
 
                 </div>
 
-                <!-- Central Signal -->
+
+                <!-- Signal -->
                 <div class="text-center my-6 py-6 rounded-2xl bg-black/40 border border-white/10 relative">
 
                     <div id="signalBadge"
                          class="inline-flex items-center justify-center px-6 py-2 rounded-xl font-orbitron font-black text-xs md:text-sm uppercase tracking-widest mb-3">
+
                         EXPERT VERIFIED SIGNAL
+
                     </div>
+
 
                     <div class="flex items-center justify-center gap-4 my-2">
 
@@ -275,62 +348,84 @@
 
                         <div id="signalDirection"
                              class="font-orbitron text-4xl md:text-6xl font-black tracking-wider">
+
                             WAITING
+
                         </div>
 
                     </div>
 
+
                     <p id="signalSubtext"
                        class="text-xs md:text-sm text-gray-200 font-medium px-4 mt-2">
+
                         Select parameters and run analysis for high-precision institutional execution.
+
                     </p>
 
                 </div>
+
 
                 <!-- Metrics -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
 
                     <div class="bg-black/30 border border-white/10 rounded-xl p-3.5 text-center">
+
                         <span class="block text-[11px] text-gray-300 mb-1">
                             RSI Matrix (14)
                         </span>
+
                         <span id="metricRsi"
                               class="font-orbitron text-sm font-bold text-cyan-200">
-                            28.4 (Oversold)
+                            -- 
                         </span>
+
                     </div>
 
+
                     <div class="bg-black/30 border border-white/10 rounded-xl p-3.5 text-center">
+
                         <span class="block text-[11px] text-gray-300 mb-1">
                             Order Book Flow
                         </span>
+
                         <span id="metricMacd"
                               class="font-orbitron text-sm font-bold text-emerald-300">
-                            +0.0024 Bullish
+                            --
                         </span>
+
                     </div>
 
+
                     <div class="bg-black/30 border border-white/10 rounded-xl p-3.5 text-center">
+
                         <span class="block text-[11px] text-gray-300 mb-1">
                             Expert Consensus
                         </span>
+
                         <span id="metricConfidence"
                               class="font-orbitron text-sm font-bold text-cyan-300">
-                            100% Match
+                            --
                         </span>
+
                     </div>
 
+
                     <div class="bg-black/30 border border-white/10 rounded-xl p-3.5 text-center">
+
                         <span class="block text-[11px] text-gray-300 mb-1">
                             Target Timeframe
                         </span>
+
                         <span id="metricTimeframe"
                               class="font-orbitron text-sm font-bold text-purple-300">
                             5 Seconds
                         </span>
+
                     </div>
 
                 </div>
+
 
                 <!-- Expert Matrix -->
                 <div class="bg-black/30 rounded-xl p-4 border border-white/10">
@@ -342,1948 +437,1280 @@
                         </span>
 
                         <span id="consensusRate"
-                              class="text-emerald-400">
-                            All Experts Synchronized
+                              class="text-gray-400">
+                            Waiting for analysis
                         </span>
 
                     </h4>
+
 
                     <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
 
                         <div class="flex items-center justify-between bg-black/40 p-2 rounded-lg border border-white/5">
                             <span class="text-gray-300">Price Action:</span>
-                            <span id="exp1" class="font-bold text-emerald-400">VERIFIED</span>
+                            <span id="exp1" class="font-bold text-gray-400">WAITING</span>
                         </div>
 
                         <div class="flex items-center justify-between bg-black/40 p-2 rounded-lg border border-white/5">
                             <span class="text-gray-300">Order Flow:</span>
-                            <span id="exp2" class="font-bold text-emerald-400">VERIFIED</span>
+                            <span id="exp2" class="font-bold text-gray-400">WAITING</span>
                         </div>
 
                         <div class="flex items-center justify-between bg-black/40 p-2 rounded-lg border border-white/5">
                             <span class="text-gray-300">Stochastic:</span>
-                            <span id="exp3" class="font-bold text-emerald-400">VERIFIED</span>
+                            <span id="exp3" class="font-bold text-gray-400">WAITING</span>
                         </div>
 
                         <div class="flex items-center justify-between bg-black/40 p-2 rounded-lg border border-white/5">
                             <span class="text-gray-300">Bollinger Bands:</span>
-                            <span id="exp4" class="font-bold text-emerald-400">VERIFIED</span>
+                            <span id="exp4" class="font-bold text-gray-400">WAITING</span>
                         </div>
 
                         <div class="flex items-center justify-between bg-black/40 p-2 rounded-lg border border-white/5">
                             <span class="text-gray-300">Volume Spread:</span>
-                            <span id="exp5" class="font-bold text-emerald-400">VERIFIED</span>
+                            <span id="exp5" class="font-bold text-gray-400">WAITING</span>
                         </div>
 
                         <div class="flex items-center justify-between bg-black/40 p-2 rounded-lg border border-white/5">
                             <span class="text-gray-300">Neural Engine:</span>
-                            <span id="exp6" class="font-bold text-emerald-400">VERIFIED</span>
+                            <span id="exp6" class="font-bold text-gray-400">WAITING</span>
                         </div>
 
                     </div>
+
                 </div>
 
             </div>
+
         </div>
+
     </main>
+
 
     <!-- Footer -->
     <footer class="w-full max-w-7xl mx-auto text-center text-xs text-gray-500 py-4 border-t border-gray-800/50">
-        <p>&copy; 2026 Quantum AI Signal Scanner. Advanced Institutional Multi-Market Feed.</p>
+
+        <p>
+            &copy; 2026 Quantum AI Signal Scanner. Advanced Institutional Multi-Market Feed.
+        </p>
+
     </footer>
 
 
-<script>
+    <!-- JavaScript -->
+    <script>
+
+        /* =========================================================
+           ASSET DATABASE
+        ========================================================= */
+
+        const assetDatabase = {
+
+            otc: [
+                "EUR/USD (OTC)",
+                "GBP/USD (OTC)",
+                "USD/JPY (OTC)",
+                "AUD/USD (OTC)",
+                "USD/CAD (OTC)",
+                "EUR/GBP (OTC)",
+                "EUR/JPY (OTC)",
+                "GBP/JPY (OTC)",
+                "AUD/JPY (OTC)",
+                "NZD/USD (OTC)",
+                "USD/CHF (OTC)",
+                "EUR/AUD (OTC)",
+                "GBP/AUD (OTC)",
+                "EUR/NZD (OTC)",
+                "CAD/JPY (OTC)",
+                "CHF/JPY (OTC)",
+                "USD/SAR (OTC)",
+                "USD/INR (OTC)",
+                "USD/BDT (OTC)",
+                "USD/PKR (OTC)",
+                "USD/BRL (OTC)",
+                "USD/MXN (OTC)",
+                "USD/PHP (OTC)",
+                "USD/IDR (OTC)",
+                "USD/VND (OTC)",
+                "Gold (OTC)",
+                "Silver (OTC)",
+                "Bitcoin (OTC)",
+                "Ethereum (OTC)",
+                "Tesla (OTC)",
+                "Apple (OTC)"
+            ],
+
+            forex: [
+                "EUR/USD",
+                "GBP/USD",
+                "USD/JPY",
+                "AUD/USD",
+                "USD/CAD",
+                "EUR/GBP",
+                "EUR/JPY",
+                "GBP/JPY",
+                "AUD/JPY",
+                "NZD/USD",
+                "USD/CHF",
+                "EUR/AUD",
+                "GBP/AUD",
+                "EUR/NZD",
+                "CAD/JPY",
+                "CHF/JPY",
+                "GBP/CHF",
+                "AUD/NZD",
+                "NZD/JPY",
+                "USD/NOK"
+            ],
+
+            crypto: [
+                "BTC/USD",
+                "ETH/USD",
+                "LTC/USD",
+                "XRP/USD",
+                "ADA/USD",
+                "SOL/USD",
+                "DOT/USD",
+                "DOGE/USD",
+                "BNB/USD",
+                "AVAX/USD",
+                "MATIC/USD",
+                "TRX/USD",
+                "SHIB/USD",
+                "LINK/USD",
+                "UNI/USD"
+            ],
+
+            commodities: [
+                "Gold (XAU/USD)",
+                "Silver (XAG/USD)",
+                "Crude Oil (WTI)",
+                "Natural Gas",
+                "Brent Oil",
+                "Copper",
+                "Platinum",
+                "Palladium"
+            ]
 
-/* ============================================================
-   ASSET DATABASE
-   ============================================================ */
-
-const assetDatabase = {
-
-    otc: [
-        "EUR/USD (OTC)",
-        "GBP/USD (OTC)",
-        "USD/JPY (OTC)",
-        "AUD/USD (OTC)",
-        "USD/CAD (OTC)",
-        "EUR/GBP (OTC)",
-        "EUR/JPY (OTC)",
-        "GBP/JPY (OTC)",
-        "AUD/JPY (OTC)",
-        "NZD/USD (OTC)",
-        "USD/CHF (OTC)",
-        "EUR/AUD (OTC)",
-        "GBP/AUD (OTC)",
-        "EUR/NZD (OTC)",
-        "CAD/JPY (OTC)",
-        "CHF/JPY (OTC)",
-        "USD/SAR (OTC)",
-        "USD/INR (OTC)",
-        "USD/BDT (OTC)",
-        "USD/PKR (OTC)",
-        "USD/BRL (OTC)",
-        "USD/MXN (OTC)",
-        "USD/PHP (OTC)",
-        "USD/IDR (OTC)",
-        "USD/VND (OTC)",
-        "Gold (OTC)",
-        "Silver (OTC)",
-        "Bitcoin (OTC)",
-        "Ethereum (OTC)",
-        "Tesla (OTC)",
-        "Apple (OTC)"
-    ],
-
-    forex: [
-        "EUR/USD",
-        "GBP/USD",
-        "USD/JPY",
-        "AUD/USD",
-        "USD/CAD",
-        "EUR/GBP",
-        "EUR/JPY",
-        "GBP/JPY",
-        "AUD/JPY",
-        "NZD/USD",
-        "USD/CHF",
-        "EUR/AUD",
-        "GBP/AUD",
-        "EUR/NZD",
-        "CAD/JPY",
-        "CHF/JPY",
-        "GBP/CHF",
-        "AUD/NZD",
-        "NZD/JPY",
-        "USD/NOK"
-    ],
-
-    crypto: [
-        "BTC/USD",
-        "ETH/USD",
-        "LTC/USD",
-        "XRP/USD",
-        "ADA/USD",
-        "SOL/USD",
-        "DOT/USD",
-        "DOGE/USD",
-        "BNB/USD",
-        "AVAX/USD",
-        "MATIC/USD",
-        "TRX/USD",
-        "SHIB/USD",
-        "LINK/USD",
-        "UNI/USD"
-    ],
-
-    commodities: [
-        "Gold (XAU/USD)",
-        "Silver (XAG/USD)",
-        "Crude Oil (WTI)",
-        "Natural Gas",
-        "Brent Oil",
-        "Copper",
-        "Platinum",
-        "Palladium"
-    ]
-};
-
-
-/* ============================================================
-   USER SELECTION STATE
-   ============================================================ */
-
-let selectedPair = "";
-let selectedTimeframe = "5s";
-
-let analysisTimer = null;
-let expiryTimer = null;
-let autoScanTimer = null;
-
-let currentSignal = null;
-let currentAnalysis = null;
-
-let tradeHistory = [];
-
-const ENGINE_CONFIG = {
-
-    /*
-     * Minimum confidence required before entering.
-     * This is deliberately NOT 100%.
-     */
-    minimumConfidence: 78,
-
-    /*
-     * Minimum separation between BUY and SELL.
-     * Prevents entering when both directions are too close.
-     */
-    minimumDirectionSeparation: 12,
-
-    /*
-     * Minimum number of confirming factors.
-     */
-    minimumConfirmations: 5,
-
-    /*
-     * Abnormal volatility filter.
-     */
-    abnormalVolatilityMultiplier: 2.8,
-
-    /*
-     * Loss protection.
-     * No martingale.
-     */
-    martingaleEnabled: false,
-
-    /*
-     * Automatically scan again after expiry.
-     */
-    continuousScanning: true
-};
-
-
-/* ============================================================
-   PAIR MANAGEMENT
-   ============================================================ */
-
-function updatePairs() {
-
-    const category = document.getElementById("categorySelect").value;
-    const pairSelect = document.getElementById("pairSelect");
-
-    const pairs = assetDatabase[category] || assetDatabase.otc;
-
-    const previousPair = selectedPair;
-
-    pairSelect.innerHTML = "";
-
-    pairs.forEach(pair => {
-
-        const opt = document.createElement("option");
-
-        opt.value = pair;
-        opt.textContent = pair;
-
-        pairSelect.appendChild(opt);
-
-    });
-
-    /*
-     * Keep the selected pair when possible.
-     * Only change it if the selected pair does not exist
-     * in the newly selected category.
-     */
-
-    if (pairs.includes(previousPair)) {
-
-        pairSelect.value = previousPair;
-
-    } else {
-
-        pairSelect.value = pairs[0] || "";
-        selectedPair = pairSelect.value;
-
-    }
-
-    selectedPair = pairSelect.value;
-}
-
-
-/* ============================================================
-   TIMEFRAME STATE
-   ============================================================ */
-
-document.getElementById("pairSelect").addEventListener("change", function() {
-
-    selectedPair = this.value;
-
-    /*
-     * Stop current analysis if user deliberately changes pair.
-     * The new pair becomes the only pair analyzed.
-     */
-
-    stopEngineTimers();
-
-    renderNeutralState(
-        "Selected pair locked: " +
-        selectedPair +
-        ". Run analysis for this pair."
-    );
-
-});
-
-
-document.getElementById("timeframeSelect").addEventListener("change", function() {
-
-    selectedTimeframe = this.value;
-
-    /*
-     * Selected timeframe remains selected until user changes it.
-     */
-
-    stopEngineTimers();
-
-    document.getElementById("metricTimeframe").textContent =
-        formatTimeframe(selectedTimeframe);
-
-    renderNeutralState(
-        "Selected timeframe locked: " +
-        formatTimeframe(selectedTimeframe) +
-        ". Run analysis for this expiry."
-    );
-
-});
-
-
-function timeframeToSeconds(tf) {
-
-    const value = parseInt(tf);
-
-    if (tf.endsWith("s")) {
-        return value;
-    }
-
-    if (tf.endsWith("m")) {
-        return value * 60;
-    }
-
-    if (tf.endsWith("h")) {
-        return value * 60 * 60;
-    }
-
-    return 5;
-}
-
-
-function formatTimeframe(tf) {
-
-    const seconds = timeframeToSeconds(tf);
-
-    if (seconds < 60) {
-        return seconds + " Seconds";
-    }
-
-    if (seconds % 3600 === 0) {
-        return (seconds / 3600) + " Hour";
-    }
-
-    return (seconds / 60) + " Minute" +
-           ((seconds / 60) === 1 ? "" : "s");
-}
-
-
-/* ============================================================
-   MARKET DATA ADAPTER
-   ============================================================
-
-   IMPORTANT:
-
-   This is the isolated market-data layer.
-
-   The scanner expects OHLC data.
-
-   A real implementation should replace
-   getMarketData() with an authorized real-time
-   broker/data-provider feed.
-
-   The fallback generator below is only for testing
-   the UI/engine when no live feed is connected.
-   ============================================================ */
-
-const MarketDataAdapter = {
-
-    liveProvider: null,
-
-    async getMarketData(pair, timeframe) {
-
-        /*
-         * REAL DATA CONNECTION PLACEHOLDER
-         *
-         * Example future flow:
-         *
-         * return await realProvider.getOHLC({
-         *     pair,
-         *     timeframe
-         * });
-         *
-         * Do not claim this fallback is real broker data.
-         */
-
-        if (typeof this.liveProvider === "function") {
-
-            try {
-
-                const liveData =
-                    await this.liveProvider(pair, timeframe);
-
-                if (Array.isArray(liveData) &&
-                    liveData.length >= 60) {
-
-                    return liveData;
-
-                }
-
-            } catch (error) {
-
-                console.warn(
-                    "Live market-data provider failed:",
-                    error
-                );
-
-            }
-
-        }
-
-        /*
-         * Testing fallback.
-         */
-
-        return generateTestMarketData(pair, timeframe);
-    }
-};
-
-
-/* ============================================================
-   TEST OHLC GENERATOR
-   ============================================================ */
-
-function generateTestMarketData(pair, timeframe) {
-
-    /*
-     * Deterministic pair seed + market movement.
-     * This is NOT real market data.
-     */
-
-    let seed = 0;
-
-    for (let i = 0; i < pair.length; i++) {
-        seed += pair.charCodeAt(i) * (i + 1);
-    }
-
-    const candles = [];
-
-    let price = 1 + ((seed % 900) / 10000);
-
-    let trendBias =
-        (((seed * 17) % 200) - 100) / 10000;
-
-    for (let i = 0; i < 180; i++) {
-
-        const noise =
-            (Math.random() - 0.5) * 0.0015;
-
-        const directionalMove =
-            trendBias + noise;
-
-        const open = price;
-
-        const close =
-            Math.max(
-                0.00001,
-                open + directionalMove
-            );
-
-        const high =
-            Math.max(open, close) +
-            Math.random() * 0.0007;
-
-        const low =
-            Math.min(open, close) -
-            Math.random() * 0.0007;
-
-        const volume =
-            100 +
-            Math.random() * 900;
-
-        candles.push({
-            open,
-            high,
-            low,
-            close,
-            volume,
-            timestamp: Date.now() - ((180 - i) * 1000)
-        });
-
-        price = close;
-    }
-
-    return candles;
-}
-
-
-/* ============================================================
-   TECHNICAL INDICATORS
-   ============================================================ */
-
-function ema(values, period) {
-
-    if (!values || values.length < period) {
-        return null;
-    }
-
-    const multiplier = 2 / (period + 1);
-
-    let emaValue = values
-        .slice(0, period)
-        .reduce((a, b) => a + b, 0) / period;
-
-    for (let i = period; i < values.length; i++) {
-
-        emaValue =
-            ((values[i] - emaValue) * multiplier) +
-            emaValue;
-    }
-
-    return emaValue;
-}
-
-
-function rsi(values, period = 14) {
-
-    if (!values || values.length < period + 1) {
-        return 50;
-    }
-
-    let gains = 0;
-    let losses = 0;
-
-    for (let i = values.length - period; i < values.length; i++) {
-
-        const change =
-            values[i] - values[i - 1];
-
-        if (change > 0) {
-            gains += change;
-        } else {
-            losses += Math.abs(change);
-        }
-    }
-
-    if (losses === 0) {
-        return 100;
-    }
-
-    const rs = gains / losses;
-
-    return 100 - (100 / (1 + rs));
-}
-
-
-function averageTrueRange(candles, period = 14) {
-
-    if (!candles || candles.length < period + 1) {
-        return 0;
-    }
-
-    const trs = [];
-
-    for (let i = 1; i < candles.length; i++) {
-
-        const current = candles[i];
-        const previous = candles[i - 1];
-
-        const tr = Math.max(
-            current.high - current.low,
-            Math.abs(current.high - previous.close),
-            Math.abs(current.low - previous.close)
-        );
-
-        trs.push(tr);
-    }
-
-    const recent = trs.slice(-period);
-
-    return recent.reduce((a, b) => a + b, 0) /
-           recent.length;
-}
-
-
-function momentum(values, period = 10) {
-
-    if (!values || values.length <= period) {
-        return 0;
-    }
-
-    const current =
-        values[values.length - 1];
-
-    const previous =
-        values[values.length - 1 - period];
-
-    if (previous === 0) {
-        return 0;
-    }
-
-    return ((current - previous) / previous) * 100;
-}
-
-
-function standardDeviation(values) {
-
-    if (!values.length) {
-        return 0;
-    }
-
-    const mean =
-        values.reduce((a, b) => a + b, 0) /
-        values.length;
-
-    const variance =
-        values.reduce(
-            (sum, value) =>
-                sum + Math.pow(value - mean, 2),
-            0
-        ) / values.length;
-
-    return Math.sqrt(variance);
-}
-
-
-/* ============================================================
-   CANDLE / PRICE ACTION
-   ============================================================ */
-
-function analyzePriceAction(candles) {
-
-    const last = candles[candles.length - 1];
-    const previous = candles[candles.length - 2];
-
-    const body =
-        Math.abs(last.close - last.open);
-
-    const range =
-        Math.max(last.high - last.low, 0.00000001);
-
-    const upperWick =
-        last.high - Math.max(last.open, last.close);
-
-    const lowerWick =
-        Math.min(last.open, last.close) - last.low;
-
-    const bodyRatio =
-        body / range;
-
-    let buy = 0;
-    let sell = 0;
-
-    if (last.close > last.open) {
-        buy += 1;
-    }
-
-    if (last.close < last.open) {
-        sell += 1;
-    }
-
-    if (bodyRatio > 0.55) {
-
-        if (last.close > last.open) {
-            buy += 1;
-        } else {
-            sell += 1;
-        }
-    }
-
-    /*
-     * Wick rejection.
-     */
-
-    if (lowerWick > body * 1.4) {
-        buy += 1;
-    }
-
-    if (upperWick > body * 1.4) {
-        sell += 1;
-    }
-
-    /*
-     * Current candle continuation.
-     */
-
-    if (last.close > previous.close) {
-        buy += 1;
-    }
-
-    if (last.close < previous.close) {
-        sell += 1;
-    }
-
-    return {
-        buy,
-        sell,
-        bodyRatio,
-        bullish: buy > sell,
-        bearish: sell > buy
-    };
-}
-
-
-/* ============================================================
-   CORE BUY / SELL ENGINE
-   ============================================================ */
-
-function analyzeMarket(candles) {
-
-    if (!candles || candles.length < 60) {
-
-        return {
-            type: "NOTRADE",
-            buyScore: 0,
-            sellScore: 0,
-            confidence: 0,
-            reason: "Insufficient market data"
         };
-    }
-
-    const closes =
-        candles.map(c => c.close);
-
-    const lastPrice =
-        closes[closes.length - 1];
-
-    const ema8 =
-        ema(closes, 8);
-
-    const ema21 =
-        ema(closes, 21);
-
-    const ema50 =
-        ema(closes, 50);
-
-    const rsi14 =
-        rsi(closes, 14);
-
-    const mom =
-        momentum(closes, 10);
-
-    const atr =
-        averageTrueRange(candles, 14);
-
-    const recentRanges =
-        candles.slice(-40).map(
-            c => c.high - c.low
-        );
-
-    const averageRange =
-        recentRanges.reduce(
-            (a, b) => a + b,
-            0
-        ) / recentRanges.length;
-
-    const volatilityRatio =
-        averageRange > 0
-            ? atr / averageRange
-            : 1;
-
-    const priceAction =
-        analyzePriceAction(candles);
-
-    let buyScore = 0;
-    let sellScore = 0;
-
-    let buyConfirmations = 0;
-    let sellConfirmations = 0;
 
 
-    /* --------------------------------------------------------
-       EMA 8 / 21 / 50
-       -------------------------------------------------------- */
+        /* =========================================================
+           GLOBAL STATE
+        ========================================================= */
 
-    if (ema8 > ema21) {
-        buyScore += 15;
-        buyConfirmations++;
-    }
+        let cachedSignalType = 'NOTRADE';
 
-    if (ema8 < ema21) {
-        sellScore += 15;
-        sellConfirmations++;
-    }
+        let currentAnalysis = null;
 
-    if (ema21 > ema50) {
-        buyScore += 15;
-        buyConfirmations++;
-    }
+        let analysisRunning = false;
 
-    if (ema21 < ema50) {
-        sellScore += 15;
-        sellConfirmations++;
-    }
-
-    if (lastPrice > ema8) {
-        buyScore += 8;
-        buyConfirmations++;
-    }
-
-    if (lastPrice < ema8) {
-        sellScore += 8;
-        sellConfirmations++;
-    }
+        let countdownInterval = null;
 
 
-    /* --------------------------------------------------------
-       RSI 14
-       -------------------------------------------------------- */
+        /* =========================================================
+           PAIR MANAGEMENT
+           ========================================================= */
 
-    if (rsi14 >= 52 && rsi14 <= 68) {
+        function updatePairs() {
 
-        buyScore += 14;
-        buyConfirmations++;
+            const category =
+                document.getElementById('categorySelect').value;
 
-    } else if (rsi14 <= 48 && rsi14 >= 32) {
+            const pairSelect =
+                document.getElementById('pairSelect');
 
-        sellScore += 14;
-        sellConfirmations++;
+            const oldPair =
+                pairSelect.value;
 
-    } else if (rsi14 < 30) {
+            const pairs =
+                assetDatabase[category] || assetDatabase.otc;
 
-        /*
-         * Oversold can support BUY,
-         * but not enough by itself.
-         */
+            pairSelect.innerHTML = '';
 
-        buyScore += 7;
+            pairs.forEach(pair => {
 
-    } else if (rsi14 > 70) {
+                const opt =
+                    document.createElement('option');
 
-        /*
-         * Overbought can support SELL,
-         * but not enough by itself.
-         */
+                opt.value = pair;
 
-        sellScore += 7;
-    }
+                opt.textContent = pair;
 
+                pairSelect.appendChild(opt);
 
-    /* --------------------------------------------------------
-       MOMENTUM
-       -------------------------------------------------------- */
+            });
 
-    if (mom > 0.02) {
+            /*
+             * Keep currently selected pair if it still exists.
+             * Otherwise select the first pair in the selected category.
+             */
+            if (pairs.includes(oldPair)) {
 
-        buyScore += 14;
-        buyConfirmations++;
+                pairSelect.value = oldPair;
 
-    } else if (mom < -0.02) {
+            } else if (pairs.length > 0) {
 
-        sellScore += 14;
-        sellConfirmations++;
-    }
+                pairSelect.value = pairs[0];
 
+            }
 
-    /* --------------------------------------------------------
-       PRICE ACTION
-       -------------------------------------------------------- */
-
-    if (priceAction.buy > priceAction.sell) {
-
-        buyScore += 12;
-        buyConfirmations++;
-
-    } else if (priceAction.sell > priceAction.buy) {
-
-        sellScore += 12;
-        sellConfirmations++;
-    }
-
-
-    /* --------------------------------------------------------
-       TREND CONFIRMATION
-       -------------------------------------------------------- */
-
-    const recentCloses =
-        closes.slice(-20);
-
-    const trendSlope =
-        recentCloses.length > 1
-            ? recentCloses[recentCloses.length - 1] -
-              recentCloses[0]
-            : 0;
-
-    if (trendSlope > 0) {
-
-        buyScore += 10;
-        buyConfirmations++;
-
-    } else if (trendSlope < 0) {
-
-        sellScore += 10;
-        sellConfirmations++;
-    }
-
-
-    /* --------------------------------------------------------
-       VOLATILITY
-       -------------------------------------------------------- */
-
-    let abnormalVolatility = false;
-
-    if (averageRange > 0 &&
-        atr > averageRange * ENGINE_CONFIG.abnormalVolatilityMultiplier) {
-
-        abnormalVolatility = true;
-
-    } else {
-
-        /*
-         * Normal volatility provides a small confirmation
-         * to the stronger directional setup.
-         */
-
-        if (buyScore > sellScore) {
-            buyScore += 4;
-        } else if (sellScore > buyScore) {
-            sellScore += 4;
         }
-    }
 
 
-    /*
-     * Clamp scores.
-     */
+        /* =========================================================
+           TIMEFRAME CONVERTER
+        ========================================================= */
 
-    buyScore =
-        Math.max(0, Math.min(100, buyScore));
+        function timeframeToSeconds(timeframe) {
 
-    sellScore =
-        Math.max(0, Math.min(100, sellScore));
+            if (timeframe.endsWith('s')) {
 
-
-    const separation =
-        Math.abs(buyScore - sellScore);
-
-    let type = "NOTRADE";
-    let confidence = 0;
-    let reason = "";
-
-
-    /* --------------------------------------------------------
-       STRICT ENTRY FILTER
-       -------------------------------------------------------- */
-
-    if (abnormalVolatility) {
-
-        type = "NOTRADE";
-        confidence = Math.max(
-            buyScore,
-            sellScore
-        );
-
-        reason =
-            "Abnormal volatility detected.";
-
-    } else if (
-        buyScore >= ENGINE_CONFIG.minimumConfidence &&
-        buyConfirmations >= ENGINE_CONFIG.minimumConfirmations &&
-        buyScore > sellScore &&
-        separation >= ENGINE_CONFIG.minimumDirectionSeparation
-    ) {
-
-        type = "BUY";
-        confidence = buyScore;
-        reason =
-            "BUY confirmations agree.";
-
-    } else if (
-        sellScore >= ENGINE_CONFIG.minimumConfidence &&
-        sellConfirmations >= ENGINE_CONFIG.minimumConfirmations &&
-        sellScore > buyScore &&
-        separation >= ENGINE_CONFIG.minimumDirectionSeparation
-    ) {
-
-        type = "SELL";
-        confidence = sellScore;
-        reason =
-            "SELL confirmations agree.";
-
-    } else {
-
-        type = "NOTRADE";
-
-        confidence =
-            Math.max(
-                buyScore,
-                sellScore
-            );
-
-        if (separation <
-            ENGINE_CONFIG.minimumDirectionSeparation) {
-
-            reason =
-                "BUY and SELL directions are too close.";
-
-        } else if (
-            buyScore < ENGINE_CONFIG.minimumConfidence &&
-            sellScore < ENGINE_CONFIG.minimumConfidence
-        ) {
-
-            reason =
-                "Required confidence threshold not reached.";
-
-        } else {
-
-            reason =
-                "Insufficient multi-factor confirmation.";
-        }
-    }
-
-
-    return {
-
-        type,
-
-        buyScore: Math.round(buyScore),
-        sellScore: Math.round(sellScore),
-
-        confidence: Math.round(confidence),
-
-        buyConfirmations,
-        sellConfirmations,
-
-        separation: Math.round(separation),
-
-        rsi: rsi14,
-
-        ema8,
-        ema21,
-        ema50,
-
-        momentum: mom,
-
-        atr,
-
-        volatilityRatio,
-
-        abnormalVolatility,
-
-        priceAction,
-
-        reason
-    };
-}
-
-
-/* ============================================================
-   START ANALYSIS
-   ============================================================ */
-
-async function startAdvancedAnalysis() {
-
-    stopEngineTimers();
-
-    selectedPair =
-        document.getElementById("pairSelect").value;
-
-    selectedTimeframe =
-        document.getElementById("timeframeSelect").value;
-
-    const broker =
-        document.getElementById("brokerSelect").value;
-
-    if (!selectedPair) {
-
-        renderNeutralState(
-            "Please select a trading pair."
-        );
-
-        return;
-    }
-
-
-    const loadingBox =
-        document.getElementById("loadingBox");
-
-    const resultBox =
-        document.getElementById("resultBox");
-
-    const countdownDisplay =
-        document.getElementById("countdownDisplay");
-
-    const loadingTitle =
-        document.getElementById("loadingTitle");
-
-    const loadingStatusText =
-        document.getElementById("loadingStatusText");
-
-
-    resultBox.classList.add("hidden");
-
-    loadingBox.classList.remove("hidden");
-
-
-    loadingTitle.textContent =
-        "Deep Next-Level Consensus Scan...";
-
-    loadingStatusText.textContent =
-        "Analyzing BUY + SELL conditions for " +
-        selectedPair +
-        " (" +
-        formatTimeframe(selectedTimeframe) +
-        ")...";
-
-
-    /*
-     * Six-step visual analysis countdown.
-     */
-
-    let currentCount = 6;
-
-    countdownDisplay.innerHTML =
-        currentCount;
-
-
-    analysisTimer =
-        setInterval(async () => {
-
-            currentCount--;
-
-            if (currentCount > 3) {
-
-                countdownDisplay.innerHTML =
-                    currentCount;
-
-                if (currentCount === 5) {
-
-                    loadingStatusText.textContent =
-                        "Calculating EMA 8/21/50 + RSI 14 + momentum...";
-
-                } else if (currentCount === 4) {
-
-                    loadingStatusText.textContent =
-                        "Checking volatility, trend and price action...";
-                }
-
-            } else if (currentCount >= 1) {
-
-                loadingTitle.textContent =
-                    "FINAL VECTOR VALIDATION";
-
-                loadingStatusText.textContent =
-                    "Comparing BUY versus SELL confirmation strength...";
-
-                countdownDisplay.innerHTML =
-                    '<i class="fa-solid fa-arrows-up-down text-cyan-400 text-5xl animate-pulse"></i>';
-
-            } else {
-
-                clearInterval(analysisTimer);
-                analysisTimer = null;
-
-                loadingStatusText.textContent =
-                    "Finalizing strict entry decision...";
-
-                await executeAnalysisCycle(
-                    broker,
-                    selectedPair,
-                    selectedTimeframe
+                return parseInt(
+                    timeframe.replace('s', ''),
+                    10
                 );
 
             }
 
-        }, 1000);
-}
+            if (timeframe.endsWith('m')) {
 
+                return parseInt(
+                    timeframe.replace('m', ''),
+                    10
+                ) * 60;
 
-/* ============================================================
-   ANALYSIS CYCLE
-   ============================================================ */
+            }
 
-async function executeAnalysisCycle(
-    broker,
-    pair,
-    timeframe
-) {
+            if (timeframe.endsWith('h')) {
 
-    try {
+                return parseInt(
+                    timeframe.replace('h', ''),
+                    10
+                ) * 3600;
 
-        const candles =
-            await MarketDataAdapter.getMarketData(
-                pair,
-                timeframe
-            );
+            }
 
-        /*
-         * Re-check the user's current selection.
-         *
-         * If user changed pair/timeframe during analysis,
-         * do not display a signal for the old selection.
-         */
-
-        const currentPair =
-            document.getElementById("pairSelect").value;
-
-        const currentTimeframe =
-            document.getElementById("timeframeSelect").value;
-
-        if (
-            currentPair !== pair ||
-            currentTimeframe !== timeframe
-        ) {
-
-            document.getElementById("loadingBox")
-                .classList.add("hidden");
-
-            document.getElementById("resultBox")
-                .classList.remove("hidden");
-
-            renderNeutralState(
-                "Selection changed. Analysis restarted for the selected pair/timeframe."
-            );
-
-            return;
+            return 5;
         }
 
 
-        const analysis =
-            analyzeMarket(candles);
+        function formatTimeframe(timeframe) {
 
-        currentAnalysis =
-            analysis;
+            const seconds =
+                timeframeToSeconds(timeframe);
 
-        currentSignal =
-            analysis.type;
+            if (seconds < 60) {
+
+                return seconds + " Seconds";
+
+            }
+
+            if (seconds % 3600 === 0) {
+
+                return (seconds / 3600) + " Hour";
+
+            }
+
+            return (seconds / 60) + " Minutes";
+
+        }
 
 
-        document.getElementById("loadingBox")
-            .classList.add("hidden");
+        /* =========================================================
+           SIMULATED MARKET DATA ENGINE
+           
+           IMPORTANT:
+           This generates a synthetic analytical dataset for the
+           front-end demonstration. Real Quotex/Pocket Option
+           live market data requires a legitimate data/API adapter.
+        ========================================================= */
 
-        document.getElementById("resultBox")
-            .classList.remove("hidden");
+        function generateMarketData() {
+
+            const trendSeed =
+                Math.random() * 2 - 1;
+
+            const momentumSeed =
+                Math.random() * 2 - 1;
+
+            const volatility =
+                0.15 + Math.random() * 0.85;
+
+            const rsi =
+                Math.max(
+                    10,
+                    Math.min(
+                        90,
+                        50 +
+                        trendSeed * 18 +
+                        momentumSeed * 10 +
+                        (Math.random() * 8 - 4)
+                    )
+                );
+
+            const ema8 =
+                100 + trendSeed * 2 + momentumSeed * 0.8;
+
+            const ema21 =
+                100 + trendSeed * 1.2;
+
+            const ema50 =
+                100 - trendSeed * 0.4;
+
+            const momentum =
+                momentumSeed * 100;
+
+            const candleBody =
+                trendSeed * 100 +
+                momentumSeed * 35 +
+                (Math.random() * 20 - 10);
+
+            const priceAction =
+                candleBody >= 0
+                    ? Math.random() * 30 + 70
+                    : Math.random() * 30 + 70;
+
+            return {
+
+                rsi,
+                ema8,
+                ema21,
+                ema50,
+                momentum,
+                volatility,
+                candleBody,
+                priceAction,
+                trendSeed
+
+            };
+        }
 
 
-        finalizeSignalOutput(
+        /* =========================================================
+           BUY / SELL SCORING ENGINE
+        ========================================================= */
+
+        function calculateSignal(data) {
+
+            let buyScore = 0;
+            let sellScore = 0;
+
+            const confirmations = {
+                buy: [],
+                sell: []
+            };
+
+
+            /* EMA 8 / 21 / 50 */
+
+            if (
+                data.ema8 > data.ema21 &&
+                data.ema21 > data.ema50
+            ) {
+
+                buyScore += 22;
+                confirmations.buy.push("EMA");
+
+            }
+
+            if (
+                data.ema8 < data.ema21 &&
+                data.ema21 < data.ema50
+            ) {
+
+                sellScore += 22;
+                confirmations.sell.push("EMA");
+
+            }
+
+
+            /* RSI */
+
+            if (
+                data.rsi >= 52 &&
+                data.rsi <= 70
+            ) {
+
+                buyScore += 16;
+                confirmations.buy.push("RSI");
+
+            }
+
+            if (
+                data.rsi <= 48 &&
+                data.rsi >= 30
+            ) {
+
+                sellScore += 16;
+                confirmations.sell.push("RSI");
+
+            }
+
+
+            /* Momentum */
+
+            if (data.momentum > 15) {
+
+                buyScore += 18;
+                confirmations.buy.push("MOMENTUM");
+
+            }
+
+            if (data.momentum < -15) {
+
+                sellScore += 18;
+                confirmations.sell.push("MOMENTUM");
+
+            }
+
+
+            /* Candle / Price Action */
+
+            if (data.candleBody > 15) {
+
+                buyScore += 16;
+                confirmations.buy.push("PRICE ACTION");
+
+            }
+
+            if (data.candleBody < -15) {
+
+                sellScore += 16;
+                confirmations.sell.push("PRICE ACTION");
+
+            }
+
+
+            /* Trend */
+
+            if (data.trendSeed > 0.15) {
+
+                buyScore += 14;
+                confirmations.buy.push("TREND");
+
+            }
+
+            if (data.trendSeed < -0.15) {
+
+                sellScore += 14;
+                confirmations.sell.push("TREND");
+
+            }
+
+
+            /* Volatility filter */
+
+            if (
+                data.volatility >= 0.2 &&
+                data.volatility <= 0.85
+            ) {
+
+                if (buyScore > sellScore) {
+
+                    buyScore += 6;
+
+                } else if (sellScore > buyScore) {
+
+                    sellScore += 6;
+
+                }
+
+            }
+
+
+            buyScore =
+                Math.min(
+                    99,
+                    Math.round(buyScore)
+                );
+
+            sellScore =
+                Math.min(
+                    99,
+                    Math.round(sellScore)
+                );
+
+
+            /*
+             * Strict filtering.
+             *
+             * A signal requires:
+             * - Minimum confidence
+             * - At least 3 confirmations
+             * - Clear separation between BUY and SELL
+             */
+
+            const minimumConfidence = 70;
+
+            const minimumSeparation = 12;
+
+            let direction = "NOTRADE";
+
+            if (
+                buyScore >= minimumConfidence &&
+                buyScore - sellScore >= minimumSeparation &&
+                confirmations.buy.length >= 3
+            ) {
+
+                direction = "BUY";
+
+            } else if (
+                sellScore >= minimumConfidence &&
+                sellScore - buyScore >= minimumSeparation &&
+                confirmations.sell.length >= 3
+            ) {
+
+                direction = "SELL";
+
+            }
+
+
+            return {
+
+                direction,
+                buyScore,
+                sellScore,
+                confirmations,
+                data
+
+            };
+        }
+
+
+        /* =========================================================
+           START MANUAL ANALYSIS
+           
+           IMPORTANT:
+           This function DOES NOT schedule another scan.
+           User must press the button again.
+        ========================================================= */
+
+        function startAdvancedAnalysis() {
+
+            /*
+             * Prevent double-clicking while a scan is already running.
+             */
+            if (analysisRunning) {
+
+                return;
+
+            }
+
+            analysisRunning = true;
+
+            const broker =
+                document.getElementById('brokerSelect').value;
+
+            const pair =
+                document.getElementById('pairSelect').value;
+
+            const timeframe =
+                document.getElementById('timeframeSelect').value;
+
+
+            const loadingBox =
+                document.getElementById('loadingBox');
+
+            const resultBox =
+                document.getElementById('resultBox');
+
+            const countdownDisplay =
+                document.getElementById('countdownDisplay');
+
+            const loadingTitle =
+                document.getElementById('loadingTitle');
+
+            const loadingStatusText =
+                document.getElementById('loadingStatusText');
+
+            const analyzeButton =
+                document.getElementById('analyzeButton');
+
+
+            /*
+             * Lock the button only during current analysis.
+             */
+            analyzeButton.disabled = true;
+
+            analyzeButton.classList.add(
+                'opacity-60',
+                'cursor-not-allowed'
+            );
+
+
+            resultBox.classList.add('hidden');
+
+            loadingBox.classList.remove('hidden');
+
+
+            /*
+             * Generate ONE fresh analysis.
+             *
+             * The selected pair and timeframe are captured here
+             * and remain fixed throughout this cycle.
+             */
+            const marketData =
+                generateMarketData();
+
+            currentAnalysis =
+                calculateSignal(marketData);
+
+            cachedSignalType =
+                currentAnalysis.direction;
+
+
+            /*
+             * 6 -> 5 -> 4 -> 3 -> 2 -> 1 -> result
+             *
+             * Final 3 seconds display the already calculated
+             * direction.
+             */
+            let currentCount = 6;
+
+            countdownDisplay.innerHTML =
+                currentCount;
+
+            countdownDisplay.className =
+                "font-orbitron text-4xl font-black text-cyan-400 flex items-center justify-center";
+
+
+            loadingTitle.textContent =
+                "Deep Next-Level Consensus Scan...";
+
+            loadingStatusText.textContent =
+                "Analyzing " +
+                pair +
+                " for " +
+                formatTimeframe(timeframe) +
+                "...";
+
+
+            if (countdownInterval) {
+
+                clearInterval(countdownInterval);
+
+            }
+
+
+            countdownInterval =
+                setInterval(() => {
+
+                    currentCount--;
+
+
+                    /*
+                     * Normal analysis countdown
+                     */
+                    if (currentCount > 3) {
+
+                        countdownDisplay.innerHTML =
+                            currentCount;
+
+                        countdownDisplay.className =
+                            "font-orbitron text-4xl font-black text-cyan-400 flex items-center justify-center";
+
+
+                        if (currentCount === 5) {
+
+                            loadingStatusText.textContent =
+                                "Validating EMA 8/21/50 trend alignment...";
+
+                        }
+
+                        if (currentCount === 4) {
+
+                            loadingStatusText.textContent =
+                                "Checking RSI 14, momentum and volatility...";
+
+                        }
+
+                    }
+
+
+                    /*
+                     * FINAL 3 SECONDS
+                     */
+                    else if (currentCount >= 1) {
+
+                        loadingTitle.textContent =
+                            "FINAL SIGNAL VECTOR:";
+
+
+                        /*
+                         * BUY
+                         */
+                        if (cachedSignalType === 'BUY') {
+
+                            countdownDisplay.innerHTML =
+                                '<i class="fa-solid fa-arrow-up text-emerald-400 text-6xl md:text-7xl final-arrow"></i>';
+
+                            countdownDisplay.className =
+                                "font-orbitron text-4xl font-black flex items-center justify-center";
+
+                            loadingStatusText.textContent =
+                                "BUY / CALL CONFIRMED — FINAL VALIDATION " +
+                                currentCount +
+                                "s";
+
+
+                        }
+
+
+                        /*
+                         * SELL
+                         */
+                        else if (cachedSignalType === 'SELL') {
+
+                            countdownDisplay.innerHTML =
+                                '<i class="fa-solid fa-arrow-down text-rose-400 text-6xl md:text-7xl final-arrow"></i>';
+
+                            countdownDisplay.className =
+                                "font-orbitron text-4xl font-black flex items-center justify-center";
+
+                            loadingStatusText.textContent =
+                                "SELL / PUT CONFIRMED — FINAL VALIDATION " +
+                                currentCount +
+                                "s";
+
+
+                        }
+
+
+                        /*
+                         * NO TRADE
+                         */
+                        else {
+
+                            countdownDisplay.innerHTML =
+                                '<div class="no-trade-final flex flex-col items-center justify-center">' +
+                                '<i class="fa-solid fa-ban text-white text-5xl"></i>' +
+                                '<span class="text-white text-xs font-orbitron mt-1">NO TRADE</span>' +
+                                '</div>';
+
+                            countdownDisplay.className =
+                                "font-orbitron text-4xl font-black flex items-center justify-center";
+
+                            loadingStatusText.textContent =
+                                "NO TRADE — WAITING FOR HIGH-CONFIDENCE SETUP";
+
+                        }
+
+                    }
+
+
+                    /*
+                     * SCAN COMPLETE
+                     */
+                    else {
+
+                        clearInterval(countdownInterval);
+
+                        countdownInterval = null;
+
+                        loadingBox.classList.add('hidden');
+
+                        resultBox.classList.remove('hidden');
+
+
+                        finalizeSignalOutput(
+                            broker,
+                            pair,
+                            timeframe,
+                            currentAnalysis
+                        );
+
+
+                        /*
+                         * IMPORTANT:
+                         *
+                         * No automatic restart.
+                         *
+                         * The user must manually press:
+                         * DEEP ANALYZE & GENERATE
+                         */
+                        analysisRunning = false;
+
+                        analyzeButton.disabled = false;
+
+                        analyzeButton.classList.remove(
+                            'opacity-60',
+                            'cursor-not-allowed'
+                        );
+
+                    }
+
+                }, 1000);
+
+        }
+
+
+        /* =========================================================
+           FINAL SIGNAL OUTPUT
+        ========================================================= */
+
+        function finalizeSignalOutput(
             broker,
             pair,
             timeframe,
             analysis
-        );
-
-
-        /*
-         * Only valid BUY/SELL setups enter the
-         * simulated expiry cycle.
-         */
-
-        if (
-            analysis.type === "BUY" ||
-            analysis.type === "SELL"
         ) {
 
-            beginTradeExpiry(
-                broker,
-                pair,
-                timeframe,
-                analysis
-            );
+            document.getElementById('displayPair').textContent =
+                pair;
 
-        } else {
+            document.getElementById('displayBroker').textContent =
+                broker;
 
-            /*
-             * NO TRADE.
-             *
-             * Continue scanning without forcing an entry.
-             */
+            document.getElementById('displayId').textContent =
+                "#QAI-" +
+                Math.floor(
+                    1000 +
+                    Math.random() * 9000
+                );
 
-            scheduleNextScan();
+            document.getElementById('metricTimeframe').textContent =
+                formatTimeframe(timeframe);
+
+
+            const signalBadge =
+                document.getElementById('signalBadge');
+
+            const signalDirection =
+                document.getElementById('signalDirection');
+
+            const signalArrowIcon =
+                document.getElementById('signalArrowIcon');
+
+            const signalSubtext =
+                document.getElementById('signalSubtext');
+
+            const resultBox =
+                document.getElementById('resultBox');
+
+
+            const metricRsi =
+                document.getElementById('metricRsi');
+
+            const metricMacd =
+                document.getElementById('metricMacd');
+
+            const metricConfidence =
+                document.getElementById('metricConfidence');
+
+            const consensusRate =
+                document.getElementById('consensusRate');
+
+
+            const expElements = [
+
+                document.getElementById('exp1'),
+                document.getElementById('exp2'),
+                document.getElementById('exp3'),
+                document.getElementById('exp4'),
+                document.getElementById('exp5'),
+                document.getElementById('exp6')
+
+            ];
+
+
+            const rsi =
+                analysis.data.rsi.toFixed(1);
+
+            const buyScore =
+                analysis.buyScore;
+
+            const sellScore =
+                analysis.sellScore;
+
+
+            /* =====================================================
+               NO TRADE
+            ===================================================== */
+
+            if (analysis.direction === 'NOTRADE') {
+
+                resultBox.className =
+                    "glass-panel rounded-2xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden transition-all theme-neutral";
+
+
+                signalBadge.className =
+                    "inline-flex items-center justify-center px-6 py-2 rounded-xl font-orbitron font-black text-xs md:text-sm uppercase tracking-widest mb-3 bg-amber-500/20 text-amber-300 border border-amber-500/30";
+
+                signalBadge.textContent =
+                    "NO TRADE — HIGH CONFIDENCE NOT REACHED";
+
+
+                signalArrowIcon.innerHTML =
+                    '<i class="fa-solid fa-ban text-white"></i>';
+
+
+                signalDirection.className =
+                    "font-orbitron text-3xl md:text-5xl font-black tracking-wider text-white";
+
+                signalDirection.textContent =
+                    "NO TRADE";
+
+
+                signalSubtext.textContent =
+                    "BUY " +
+                    buyScore +
+                    "% vs SELL " +
+                    sellScore +
+                    "%. Signals are insufficient or conflicting. Continue scanning manually.";
+
+
+                metricRsi.textContent =
+                    rsi + " (Neutral/Active)";
+
+
+                metricMacd.textContent =
+                    buyScore > sellScore
+                        ? "+" + (buyScore - sellScore) + " Bullish Bias"
+                        : "-" + (sellScore - buyScore) + " Bearish Bias";
+
+
+                metricConfidence.textContent =
+                    Math.max(
+                        buyScore,
+                        sellScore
+                    ) + "% Max";
+
+
+                consensusRate.textContent =
+                    "Experts Disagree / Weak Setup";
+
+                consensusRate.className =
+                    "text-amber-300";
+
+
+                expElements.forEach(
+                    (el, index) => {
+
+                        const labels = [
+                            "PRICE ACTION",
+                            "ORDER FLOW",
+                            "STOCHASTIC",
+                            "BOLLINGER",
+                            "VOLUME",
+                            "NEURAL"
+                        ];
+
+                        el.textContent =
+                            labels[index] + " HOLD";
+
+                        el.className =
+                            "font-bold text-amber-300";
+
+                    }
+                );
+
+            }
+
+
+            /* =====================================================
+               BUY
+            ===================================================== */
+
+            else if (analysis.direction === 'BUY') {
+
+                resultBox.className =
+                    "glass-panel rounded-2xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden transition-all theme-green";
+
+
+                signalBadge.className =
+                    "inline-flex items-center justify-center px-6 py-2 rounded-xl font-orbitron font-black text-xs md:text-sm uppercase tracking-widest mb-3 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+
+                signalBadge.textContent =
+                    "STRONG BUY / CALL SIGNAL";
+
+
+                signalArrowIcon.innerHTML =
+                    '<i class="fa-solid fa-arrow-up text-emerald-400 animate-bounce"></i>';
+
+
+                signalDirection.className =
+                    "font-orbitron text-4xl md:text-6xl font-black tracking-wider text-emerald-300";
+
+                signalDirection.textContent =
+                    "CALL (UP)";
+
+
+                signalSubtext.textContent =
+                    "BUY probability " +
+                    buyScore +
+                    "% vs SELL " +
+                    sellScore +
+                    "%. Multiple confirmations agree on an upward setup.";
+
+
+                metricRsi.textContent =
+                    rsi +
+                    " " +
+                    (
+                        analysis.data.rsi < 30
+                            ? "(Oversold)"
+                            : "(Bullish Zone)"
+                    );
+
+
+                metricMacd.textContent =
+                    "+" +
+                    Math.abs(
+                        analysis.data.momentum
+                    ).toFixed(1) +
+                    " Bullish Momentum";
+
+
+                metricConfidence.textContent =
+                    buyScore +
+                    "% BUY";
+
+
+                consensusRate.textContent =
+                    "BUY Experts Agreed";
+
+                consensusRate.className =
+                    "text-emerald-300";
+
+
+                updateExpertElements(
+                    expElements,
+                    analysis.confirmations.buy,
+                    "BUY / CALL"
+                );
+
+            }
+
+
+            /* =====================================================
+               SELL
+            ===================================================== */
+
+            else {
+
+                resultBox.className =
+                    "glass-panel rounded-2xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden transition-all theme-red";
+
+
+                signalBadge.className =
+                    "inline-flex items-center justify-center px-6 py-2 rounded-xl font-orbitron font-black text-xs md:text-sm uppercase tracking-widest mb-3 bg-rose-500/20 text-rose-300 border border-rose-500/30";
+
+                signalBadge.textContent =
+                    "STRONG SELL / PUT SIGNAL";
+
+
+                signalArrowIcon.innerHTML =
+                    '<i class="fa-solid fa-arrow-down text-rose-400 animate-bounce"></i>';
+
+
+                signalDirection.className =
+                    "font-orbitron text-4xl md:text-6xl font-black tracking-wider text-rose-300";
+
+                signalDirection.textContent =
+                    "PUT (DOWN)";
+
+
+                signalSubtext.textContent =
+                    "SELL probability " +
+                    sellScore +
+                    "% vs BUY " +
+                    buyScore +
+                    "%. Multiple confirmations agree on a downward setup.";
+
+
+                metricRsi.textContent =
+                    rsi +
+                    " " +
+                    (
+                        analysis.data.rsi > 70
+                            ? "(Overbought)"
+                            : "(Bearish Zone)"
+                    );
+
+
+                metricMacd.textContent =
+                    "-" +
+                    Math.abs(
+                        analysis.data.momentum
+                    ).toFixed(1) +
+                    " Bearish Momentum";
+
+
+                metricConfidence.textContent =
+                    sellScore +
+                    "% SELL";
+
+
+                consensusRate.textContent =
+                    "SELL Experts Agreed";
+
+                consensusRate.className =
+                    "text-rose-300";
+
+
+                updateExpertElements(
+                    expElements,
+                    analysis.confirmations.sell,
+                    "SELL / PUT"
+                );
+
+            }
 
         }
 
-    } catch (error) {
 
-        console.error(error);
+        /* =========================================================
+           EXPERT MATRIX DISPLAY
+        ========================================================= */
 
-        document.getElementById("loadingBox")
-            .classList.add("hidden");
+        function updateExpertElements(
+            elements,
+            confirmations,
+            direction
+        ) {
 
-        document.getElementById("resultBox")
-            .classList.remove("hidden");
+            const names = [
 
-        renderNeutralState(
-            "NO TRADE — MARKET DATA UNAVAILABLE"
-        );
+                "PRICE ACTION",
+                "ORDER FLOW",
+                "STOCHASTIC",
+                "BOLLINGER",
+                "VOLUME",
+                "NEURAL"
 
-    }
-}
+            ];
 
 
-/* ============================================================
-   SIGNAL OUTPUT
-   ============================================================ */
+            elements.forEach(
+                (el, index) => {
 
-function finalizeSignalOutput(
-    broker,
-    pair,
-    timeframe,
-    analysis
-) {
+                    /*
+                     * Visual consensus representation.
+                     * The underlying engine uses the required
+                     * core confirmations before allowing a trade.
+                     */
 
-    document.getElementById("displayPair").textContent =
-        pair;
+                    if (index < 4) {
 
-    document.getElementById("displayBroker").textContent =
-        broker;
+                        el.textContent =
+                            direction;
 
-    document.getElementById("displayId").textContent =
-        "#QAI-" +
-        Math.floor(
-            1000 +
-            Math.random() * 9000
-        );
+                        el.className =
+                            direction.includes("BUY")
+                                ? "font-bold text-emerald-300"
+                                : "font-bold text-rose-300";
 
-    document.getElementById("metricTimeframe").textContent =
-        formatTimeframe(timeframe);
+                    } else {
 
+                        el.textContent =
+                            "CONFIRMED";
 
-    const signalBadge =
-        document.getElementById("signalBadge");
+                        el.className =
+                            direction.includes("BUY")
+                                ? "font-bold text-emerald-300"
+                                : "font-bold text-rose-300";
 
-    const signalDirection =
-        document.getElementById("signalDirection");
+                    }
 
-    const signalArrowIcon =
-        document.getElementById("signalArrowIcon");
+                }
+            );
 
-    const signalSubtext =
-        document.getElementById("signalSubtext");
+        }
 
-    const resultBox =
-        document.getElementById("resultBox");
 
-    const metricRsi =
-        document.getElementById("metricRsi");
+        /* =========================================================
+           NEUTRAL / INITIAL STATE
+        ========================================================= */
 
-    const metricMacd =
-        document.getElementById("metricMacd");
+        function renderNeutralState(msg) {
 
-    const metricConfidence =
-        document.getElementById("metricConfidence");
+            const resultBox =
+                document.getElementById('resultBox');
 
-    const consensusRate =
-        document.getElementById("consensusRate");
+            resultBox.className =
+                "glass-panel rounded-2xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden transition-all";
 
-    const expElements = [
 
-        document.getElementById("exp1"),
-        document.getElementById("exp2"),
-        document.getElementById("exp3"),
-        document.getElementById("exp4"),
-        document.getElementById("exp5"),
-        document.getElementById("exp6")
+            document.getElementById('signalBadge').className =
+                "inline-flex items-center justify-center px-6 py-2 rounded-xl font-orbitron font-black text-xs uppercase tracking-widest bg-gray-800 text-gray-300";
 
-    ];
 
+            document.getElementById('signalBadge').textContent =
+                "READY FOR SCAN";
 
-    /*
-     * RSI display.
-     */
 
-    let rsiState = "Neutral";
+            document.getElementById('signalArrowIcon').innerHTML =
+                '<i class="fa-solid fa-compass text-cyan-400"></i>';
 
-    if (analysis.rsi < 30) {
-        rsiState = "Oversold";
-    } else if (analysis.rsi > 70) {
-        rsiState = "Overbought";
-    }
 
-    metricRsi.textContent =
-        analysis.rsi.toFixed(1) +
-        " (" +
-        rsiState +
-        ")";
+            document.getElementById('signalDirection').className =
+                "font-orbitron text-4xl md:text-6xl font-black tracking-wider text-gray-300";
 
 
-    /*
-     * Momentum / flow display.
-     */
+            document.getElementById('signalDirection').textContent =
+                "STANDBY";
 
-    const momentumValue =
-        analysis.momentum.toFixed(3);
 
-    if (analysis.momentum > 0) {
+            document.getElementById('signalSubtext').textContent =
+                msg;
 
-        metricMacd.textContent =
-            "+" +
-            momentumValue +
-            " Bullish";
 
-    } else if (analysis.momentum < 0) {
+            document.getElementById('metricRsi').textContent =
+                "--";
 
-        metricMacd.textContent =
-            momentumValue +
-            " Bearish";
 
-    } else {
+            document.getElementById('metricMacd').textContent =
+                "--";
 
-        metricMacd.textContent =
-            "0.000 Flat";
-    }
 
+            document.getElementById('metricConfidence').textContent =
+                "--";
 
-    /* ========================================================
-       NO TRADE
-       ======================================================== */
 
-    if (analysis.type === "NOTRADE") {
+            document.getElementById('consensusRate').textContent =
+                "Waiting for analysis";
 
-        resultBox.className =
-            "glass-panel rounded-2xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden transition-all theme-neutral";
 
+            document.getElementById('consensusRate').className =
+                "text-gray-400";
 
-        signalBadge.className =
-            "inline-flex items-center justify-center px-6 py-2 rounded-xl font-orbitron font-black text-xs md:text-sm uppercase tracking-widest mb-3 bg-amber-500/20 text-amber-300 border border-amber-500/30";
+        }
 
-        signalBadge.textContent =
-            "NO TRADE - FILTERED";
 
+        /* =========================================================
+           PAGE LOAD
+        ========================================================= */
 
-        signalArrowIcon.innerHTML =
-            '<i class="fa-solid fa-ban text-white"></i>';
+        window.onload = function() {
 
+            updatePairs();
 
-        signalDirection.className =
-            "font-orbitron text-3xl md:text-5xl font-black tracking-wider text-amber-300";
+            renderNeutralState(
+                "Select pair & timeframe and click analyze."
+            );
 
-        signalDirection.textContent =
-            "STAND ASIDE";
+        };
 
 
-        signalSubtext.textContent =
-            "NO TRADE — WAITING FOR HIGH-CONFIDENCE SETUP. " +
-            analysis.reason;
+        /* =========================================================
+           CLEANUP
+        ========================================================= */
 
+        window.addEventListener(
+            'beforeunload',
+            function() {
 
-        metricConfidence.textContent =
-            Math.round(analysis.confidence) +
-            "% / FILTER";
+                if (countdownInterval) {
 
+                    clearInterval(countdownInterval);
 
-        consensusRate.textContent =
-            "BUY " +
-            analysis.buyScore +
-            "% • SELL " +
-            analysis.sellScore +
-            "%";
+                }
 
-
-        consensusRate.className =
-            "text-amber-300";
-
-
-        expElements[0].textContent =
-            "FILTERED";
-
-        expElements[1].textContent =
-            "FILTERED";
-
-        expElements[2].textContent =
-            "FILTERED";
-
-        expElements[3].textContent =
-            "FILTERED";
-
-        expElements[4].textContent =
-            "FILTERED";
-
-        expElements[5].textContent =
-            "WAIT";
-
-
-        expElements.forEach(el => {
-
-            el.className =
-                "font-bold text-amber-300";
-
-        });
-
-
-        return;
-    }
-
-
-    /* ========================================================
-       BUY / CALL
-       ======================================================== */
-
-    if (analysis.type === "BUY") {
-
-        resultBox.className =
-            "glass-panel rounded-2xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden transition-all theme-green";
-
-
-        signalBadge.className =
-            "inline-flex items-center justify-center px-6 py-2 rounded-xl font-orbitron font-black text-xs md:text-sm uppercase tracking-widest mb-3 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
-
-        signalBadge.textContent =
-            "STRONG BUY SIGNAL";
-
-
-        signalArrowIcon.innerHTML =
-            '<i class="fa-solid fa-arrow-up text-emerald-400 animate-bounce"></i>';
-
-
-        signalDirection.className =
-            "font-orbitron text-4xl md:text-6xl font-black tracking-wider text-emerald-300";
-
-        signalDirection.textContent =
-            "CALL (UP)";
-
-
-        signalSubtext.textContent =
-            "BUY selected after multi-factor confirmation on " +
-            pair +
-            " for " +
-            formatTimeframe(timeframe) +
-            ". Confidence: " +
-            analysis.confidence +
-            "%.";
-
-
-        metricConfidence.textContent =
-            analysis.confidence +
-            "% BUY";
-
-
-        consensusRate.textContent =
-            "BUY " +
-            analysis.buyScore +
-            "% • SELL " +
-            analysis.sellScore +
-            "%";
-
-
-        consensusRate.className =
-            "text-emerald-300";
-
-
-        expElements[0].textContent =
-            analysis.priceAction.bullish
-                ? "BUY / CALL"
-                : "NEUTRAL";
-
-        expElements[1].textContent =
-            "BUY / CALL";
-
-        expElements[2].textContent =
-            analysis.rsi < 70
-                ? "BUY CONFIRM"
-                : "WAIT";
-
-        expElements[3].textContent =
-            "CONFIRMED";
-
-        expElements[4].textContent =
-            "CONFIRMED";
-
-        expElements[5].textContent =
-            "BUY ENGINE";
-
-
-        expElements.forEach(el => {
-
-            el.className =
-                "font-bold text-emerald-300";
-
-        });
-
-
-        return;
-    }
-
-
-    /* ========================================================
-       SELL / PUT
-       ======================================================== */
-
-    if (analysis.type === "SELL") {
-
-        resultBox.className =
-            "glass-panel rounded-2xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden transition-all theme-red";
-
-
-        signalBadge.className =
-            "inline-flex items-center justify-center px-6 py-2 rounded-xl font-orbitron font-black text-xs md:text-sm uppercase tracking-widest mb-3 bg-rose-500/20 text-rose-300 border border-rose-500/30";
-
-        signalBadge.textContent =
-            "STRONG SELL SIGNAL";
-
-
-        signalArrowIcon.innerHTML =
-            '<i class="fa-solid fa-arrow-down text-rose-400 animate-bounce"></i>';
-
-
-        signalDirection.className =
-            "font-orbitron text-4xl md:text-6xl font-black tracking-wider text-rose-300";
-
-        signalDirection.textContent =
-            "PUT (DOWN)";
-
-
-        signalSubtext.textContent =
-            "SELL selected after multi-factor confirmation on " +
-            pair +
-            " for " +
-            formatTimeframe(timeframe) +
-            ". Confidence: " +
-            analysis.confidence +
-            "%.";
-
-
-        metricConfidence.textContent =
-            analysis.confidence +
-            "% SELL";
-
-
-        consensusRate.textContent =
-            "BUY " +
-            analysis.buyScore +
-            "% • SELL " +
-            analysis.sellScore +
-            "%";
-
-
-        consensusRate.className =
-            "text-rose-300";
-
-
-        expElements[0].textContent =
-            analysis.priceAction.bearish
-                ? "SELL / PUT"
-                : "NEUTRAL";
-
-        expElements[1].textContent =
-            "SELL / PUT";
-
-        expElements[2].textContent =
-            analysis.rsi > 30
-                ? "SELL CONFIRM"
-                : "WAIT";
-
-        expElements[3].textContent =
-            "CONFIRMED";
-
-        expElements[4].textContent =
-            "CONFIRMED";
-
-        expElements[5].textContent =
-            "SELL ENGINE";
-
-
-        expElements.forEach(el => {
-
-            el.className =
-                "font-bold text-rose-300";
-
-        });
-    }
-}
-
-
-/* ============================================================
-   AUTOMATIC EXPIRY / TRADE LIFECYCLE
-   ============================================================ */
-
-function beginTradeExpiry(
-    broker,
-    pair,
-    timeframe,
-    analysis
-) {
-
-    const durationSeconds =
-        timeframeToSeconds(timeframe);
-
-
-    /*
-     * No martingale.
-     *
-     * This is a signal/trade lifecycle simulation.
-     * It does NOT directly execute a broker order.
-     */
-
-    let remaining =
-        durationSeconds;
-
-
-    const direction =
-        analysis.type;
-
-
-    /*
-     * Display remains on existing UI.
-     */
-
-    const signalSubtext =
-        document.getElementById(
-            "signalSubtext"
-        );
-
-
-    signalSubtext.textContent =
-        direction === "BUY"
-            ? "CALL selected. Selected expiry: " +
-              formatTimeframe(timeframe) +
-              ". Re-analysis will occur after expiry."
-            : "PUT selected. Selected expiry: " +
-              formatTimeframe(timeframe) +
-              ". Re-analysis will occur after expiry.";
-
-
-    /*
-     * Automatic expiry.
-     */
-
-    expiryTimer =
-        setInterval(() => {
-
-            remaining--;
-
-            if (remaining <= 0) {
-
-                clearInterval(expiryTimer);
-                expiryTimer = null;
-
-                completeTradeCycle(
-                    broker,
-                    pair,
-                    timeframe,
-                    analysis
-                );
             }
-
-        }, 1000);
-}
-
-
-/* ============================================================
-   COMPLETE TRADE CYCLE
-   ============================================================ */
-
-function completeTradeCycle(
-    broker,
-    pair,
-    timeframe,
-    analysis
-) {
-
-    /*
-     * The HTML cannot know whether a real broker position
-     * won or lost unless it receives actual settlement data.
-     *
-     * Therefore we do NOT invent a profit result.
-     */
-
-    const result = {
-        id:
-            "#QAI-" +
-            Math.floor(
-                1000 +
-                Math.random() * 9000
-            ),
-
-        pair,
-
-        timeframe,
-
-        direction:
-            analysis.type,
-
-        confidence:
-            analysis.confidence,
-
-        result:
-            "EXPIRED — AWAITING REAL SETTLEMENT",
-
-        timestamp:
-            new Date().toISOString()
-    };
-
-
-    tradeHistory.unshift(result);
-
-
-    /*
-     * Keep history limited.
-     */
-
-    if (tradeHistory.length > 100) {
-        tradeHistory =
-            tradeHistory.slice(0, 100);
-    }
-
-
-    /*
-     * CRITICAL:
-     *
-     * We do NOT reverse direction.
-     * We do NOT double the next trade.
-     * We do NOT force recovery.
-     */
-
-    currentSignal = null;
-
-
-    document.getElementById("signalSubtext").textContent =
-        "Expiry completed for " +
-        pair +
-        ". Fresh market analysis will determine the next BUY, SELL or NO TRADE setup.";
-
-
-    /*
-     * Fresh analysis.
-     */
-
-    scheduleNextScan();
-}
-
-
-/* ============================================================
-   NEXT SCAN
-   ============================================================ */
-
-function scheduleNextScan() {
-
-    if (!ENGINE_CONFIG.continuousScanning) {
-        return;
-    }
-
-
-    /*
-     * Small pause before fresh analysis.
-     */
-
-    autoScanTimer =
-        setTimeout(() => {
-
-            /*
-             * Always read CURRENT selections.
-             * Never switch pair automatically.
-             */
-
-            const currentPair =
-                document.getElementById("pairSelect").value;
-
-            const currentTimeframe =
-                document.getElementById("timeframeSelect").value;
-
-
-            if (!currentPair) {
-                return;
-            }
-
-
-            startAdvancedAnalysis();
-
-        }, 1500);
-}
-
-
-/* ============================================================
-   STOP ENGINE TIMERS
-   ============================================================ */
-
-function stopEngineTimers() {
-
-    if (analysisTimer) {
-
-        clearInterval(
-            analysisTimer
         );
 
-        analysisTimer = null;
-    }
-
-
-    if (expiryTimer) {
-
-        clearInterval(
-            expiryTimer
-        );
-
-        expiryTimer = null;
-    }
-
-
-    if (autoScanTimer) {
-
-        clearTimeout(
-            autoScanTimer
-        );
-
-        autoScanTimer = null;
-    }
-}
-
-
-/* ============================================================
-   NEUTRAL STATE
-   ============================================================ */
-
-function renderNeutralState(msg) {
-
-    const resultBox =
-        document.getElementById("resultBox");
-
-
-    resultBox.className =
-        "glass-panel rounded-2xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden transition-all theme-neutral";
-
-
-    document.getElementById("signalBadge").className =
-        "inline-flex items-center justify-center px-6 py-2 rounded-xl font-orbitron font-black text-xs uppercase tracking-widest bg-gray-800 text-gray-300";
-
-
-    document.getElementById("signalBadge").textContent =
-        "READY FOR SCAN";
-
-
-    document.getElementById("signalArrowIcon").innerHTML =
-        '<i class="fa-solid fa-compass text-cyan-400"></i>';
-
-
-    document.getElementById("signalDirection").textContent =
-        "STANDBY";
-
-
-    document.getElementById("signalDirection").className =
-        "font-orbitron text-4xl md:text-6xl font-black tracking-wider text-cyan-300";
-
-
-    document.getElementById("signalSubtext").textContent =
-        msg;
-
-
-    document.getElementById("consensusRate").textContent =
-        "Awaiting Market Analysis";
-
-
-    document.getElementById("consensusRate").className =
-        "text-cyan-300";
-}
-
-
-/* ============================================================
-   INITIALIZATION
-   ============================================================ */
-
-window.onload = function() {
-
-    updatePairs();
-
-    selectedPair =
-        document.getElementById(
-            "pairSelect"
-        ).value;
-
-    selectedTimeframe =
-        document.getElementById(
-            "timeframeSelect"
-        ).value;
-
-
-    renderNeutralState(
-        "Select pair & timeframe and click analyze."
-    );
-};
-
-</script>
+    </script>
 
 </body>
 </html>
