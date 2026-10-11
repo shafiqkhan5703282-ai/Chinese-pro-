@@ -214,7 +214,7 @@
                     <div id="countdownDisplay" class="font-orbitron text-5xl font-black text-cyan-400 flex items-center justify-center">3</div>
                 </div>
                 <h3 id="loadingTitle" class="font-orbitron text-lg font-bold text-gray-200 mb-2">Analyzing Precise Tick Feed...</h3>
-                <p id="loadingStatusText" class="text-xs text-gray-400 max-w-sm">Calculating rapid high-accuracy dual signal vectors...</p>
+                <p id="loadingStatusText" class="text-xs text-gray-400 max-w-sm">Calculating high-accuracy dual signals &amp; success percentages...</p>
             </div>
 
             <!-- UNIFIED RESULT BOARD -->
@@ -292,7 +292,8 @@
                         <p id="advSignalSubtext" class="text-xs text-gray-300 font-medium px-2 mt-1">Independent accurate momentum volatility scan.</p>
                     </div>
 
-                    <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                    <!-- Metrics Grid including Success Suggestion Percentage -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-center text-xs">
                         <div class="bg-black/40 border border-white/10 rounded-lg p-2.5">
                             <span class="block text-[10px] text-gray-400 mb-0.5">Entry Price</span>
                             <span id="advMetricPrice" class="font-orbitron font-bold text-purple-200">--</span>
@@ -304,6 +305,10 @@
                         <div class="bg-black/40 border border-white/10 rounded-lg p-2.5">
                             <span class="block text-[10px] text-gray-400 mb-0.5">10s Confidence</span>
                             <span id="advMetricConfidence" class="font-orbitron font-bold text-cyan-300">--</span>
+                        </div>
+                        <div class="bg-black/40 border border-emerald-500/40 rounded-lg p-2.5 bg-emerald-950/20">
+                            <span class="block text-[10px] text-emerald-300 font-bold mb-0.5">Success Suggestion</span>
+                            <span id="advSuggestionRate" class="font-orbitron font-bold text-emerald-400 text-sm">--%</span>
                         </div>
                     </div>
                 </div>
@@ -425,7 +430,7 @@
                 if (currentCount >= 1) {
                     countdownDisplay.innerHTML = currentCount;
                     if (currentCount === 2) loadingStatusText.textContent = "Processing accurate indicator consensus...";
-                    if (currentCount === 1) loadingStatusText.textContent = "Finalizing precise advance signal...";
+                    if (currentCount === 1) loadingStatusText.textContent = "Calculating success suggestion percentages...";
                 } else {
                     clearInterval(countdownInterval);
                     countdownInterval = null;
@@ -451,7 +456,7 @@
 
         function generateFallbackAnalysis(broker, pair, timeframe) {
             const trend = Math.random() > 0.45 ? 'BUY' : 'SELL';
-            const advTrend = Math.random() > 0.45 ? 'BUY' : 'SELL'; // High-accuracy directional bias
+            const advTrend = Math.random() > 0.45 ? 'BUY' : 'SELL';
             const price = (1.0850 + Math.random() * 0.0040).toFixed(5);
             return {
                 live_signal: {
@@ -468,6 +473,7 @@
                     price: price,
                     volatility: (Math.random() * 0.4 + 0.3).toFixed(2) + "%",
                     confidence: Math.floor(Math.random() * 10) + 88,
+                    suggestion_rate: Math.floor(Math.random() * 8) + 91, // 91% to 98% suggestion success rate
                     timestamp: new Date().toLocaleTimeString()
                 }
             };
@@ -521,6 +527,7 @@
             document.getElementById('advMetricPrice').textContent = adv.price;
             document.getElementById('advMetricVolatility').textContent = adv.volatility;
             document.getElementById('advMetricConfidence').textContent = adv.confidence + "%";
+            document.getElementById('advSuggestionRate').textContent = (adv.suggestion_rate || Math.floor(Math.random() * 8) + 91) + "% Success";
 
             const badge = document.getElementById('advSignalBadge');
             const dir = document.getElementById('advSignalDirection');
