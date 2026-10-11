@@ -203,7 +203,7 @@
             </div>
         </div>
 
-        <!-- Right Column: Dual Result Cards Board -->
+        <!-- Right Column: Unified Single Board Container -->
         <div class="lg:col-span-2 flex flex-col gap-6">
 
             <!-- Loading Box (10s Countdown) -->
@@ -217,116 +217,93 @@
                 <p id="loadingStatusText" class="text-xs text-gray-400 max-w-sm">Gathering live market data and calculating precise multi-indicator consensus...</p>
             </div>
 
-            <!-- Side-by-Side or Stacked Results Board -->
-            <div id="boardsContainer" class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            <!-- UNIFIED RESULT BOARD -->
+            <div id="resultBoard" class="glass-panel rounded-2xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden transition-all">
+                
+                <!-- Board Header -->
+                <div class="flex flex-wrap justify-between items-center gap-4 mb-6 border-b border-white/10 pb-4">
+                    <div class="flex items-center gap-3">
+                        <span id="displayPair" class="font-orbitron font-black text-lg text-white">EUR/USD (OTC)</span>
+                        <span id="displayBroker" class="text-xs px-2.5 py-1 rounded-lg bg-white/10 text-white font-semibold">Pocket Option</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs text-gray-300">Matrix ID:</span>
+                        <span id="displayId" class="text-xs font-mono text-cyan-300 font-bold">#QAI-8821</span>
+                    </div>
+                </div>
 
-                <!-- CARD A: LIVE MARKET SIGNAL -->
-                <div id="resultBox" class="glass-panel rounded-2xl p-6 flex flex-col justify-between relative overflow-hidden transition-all">
-                    <div class="flex items-center justify-between border-b border-cyan-500/30 pb-3 mb-4">
+                <!-- SECTION 1: LIVE MARKET SIGNAL -->
+                <div class="mb-6 bg-black/30 rounded-2xl p-5 border border-cyan-500/30">
+                    <div class="flex items-center justify-between border-b border-cyan-500/20 pb-2 mb-3">
                         <span class="font-orbitron text-xs font-bold text-cyan-400 tracking-wider uppercase flex items-center gap-2">
-                            <i class="fa-solid fa-satellite-dish"></i> CARD A: LIVE MARKET SIGNAL
+                            <i class="fa-solid fa-satellite-dish"></i> LIVE MARKET SIGNAL
                         </span>
                         <span id="liveTimestamp" class="text-[11px] text-gray-400 font-mono">--:--:--</span>
                     </div>
 
-                    <div class="flex justify-between items-center gap-2 mb-4 border-b border-white/10 pb-3">
-                        <div>
-                            <span id="displayPair" class="font-orbitron font-black text-base text-white block">EUR/USD (OTC)</span>
-                            <span id="displayBroker" class="text-[11px] text-gray-400">Pocket Option</span>
-                        </div>
-                        <span id="displayId" class="text-xs font-mono text-cyan-300 font-bold">#QAI-8821</span>
-                    </div>
-
                     <div class="text-center my-3 py-4 rounded-xl bg-black/40 border border-white/10 relative">
-                        <div id="signalBadge" class="inline-flex items-center justify-center px-4 py-1.5 rounded-lg font-orbitron font-black text-xs uppercase tracking-wider mb-2">
+                        <div id="signalBadge" class="inline-flex items-center justify-center px-4 py-1 rounded-lg font-orbitron font-black text-xs uppercase tracking-wider mb-2 bg-gray-800 text-gray-300">
                             STANDBY
                         </div>
                         <div class="flex items-center justify-center gap-3 my-1">
-                            <div id="signalArrowIcon" class="text-3xl md:text-5xl"></div>
-                            <div id="signalDirection" class="font-orbitron text-3xl md:text-5xl font-black tracking-wider">WAITING</div>
+                            <div id="signalArrowIcon" class="text-3xl md:text-4xl"></div>
+                            <div id="signalDirection" class="font-orbitron text-3xl md:text-4xl font-black tracking-wider">WAITING</div>
                         </div>
-                        <p id="signalSubtext" class="text-xs text-gray-300 font-medium px-3 mt-1">Select pair and click GENERATE BOTH SIGNALS.</p>
+                        <p id="signalSubtext" class="text-xs text-gray-300 font-medium px-2 mt-1">Select pair and click GENERATE BOTH SIGNALS.</p>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-2 mb-4 text-center text-xs">
-                        <div class="bg-black/30 border border-white/10 rounded-lg p-2.5">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-center text-xs">
+                        <div class="bg-black/40 border border-white/10 rounded-lg p-2.5">
                             <span class="block text-[10px] text-gray-400 mb-0.5">Live Price</span>
                             <span id="metricPrice" class="font-orbitron font-bold text-cyan-200">--</span>
                         </div>
-                        <div class="bg-black/30 border border-white/10 rounded-lg p-2.5">
-                            <span class="block text-[10px] text-gray-400 mb-0.5">RSI (14) / MACD</span>
+                        <div class="bg-black/40 border border-white/10 rounded-lg p-2.5">
+                            <span class="block text-[10px] text-gray-400 mb-0.5">RSI / MACD</span>
                             <span id="metricRsi" class="font-orbitron font-bold text-emerald-300">--</span>
                         </div>
-                        <div class="bg-black/30 border border-white/10 rounded-lg p-2.5">
+                        <div class="bg-black/40 border border-white/10 rounded-lg p-2.5">
                             <span class="block text-[10px] text-gray-400 mb-0.5">Confidence</span>
                             <span id="metricConfidence" class="font-orbitron font-bold text-cyan-300">--</span>
                         </div>
-                        <div class="bg-black/30 border border-white/10 rounded-lg p-2.5">
+                        <div class="bg-black/40 border border-white/10 rounded-lg p-2.5">
                             <span class="block text-[10px] text-gray-400 mb-0.5">Timeframe</span>
                             <span id="metricTimeframe" class="font-orbitron font-bold text-purple-300">5s</span>
                         </div>
                     </div>
-
-                    <div class="bg-black/30 rounded-lg p-3 border border-white/10 text-xs">
-                        <div class="flex justify-between items-center text-gray-300 font-bold mb-2 font-orbitron text-[11px]">
-                            <span>Consensus Feed</span>
-                            <span id="consensusRate" class="text-gray-400 font-normal">--</span>
-                        </div>
-                        <div id="reasonsList" class="text-[11px] text-gray-400 space-y-1">
-                            <div>• Awaiting backend sync...</div>
-                        </div>
-                    </div>
                 </div>
 
-                <!-- CARD B: ADVANCED 10-SECOND SIGNAL -->
-                <div id="advResultBox" class="glass-panel rounded-2xl p-6 flex flex-col justify-between relative overflow-hidden transition-all border-purple-500/40">
-                    <div class="flex items-center justify-between border-b border-purple-500/30 pb-3 mb-4">
+                <!-- SECTION 2: ADVANCED 10-SECOND SIGNAL -->
+                <div class="bg-black/30 rounded-2xl p-5 border border-purple-500/40">
+                    <div class="flex items-center justify-between border-b border-purple-500/20 pb-2 mb-3">
                         <span class="font-orbitron text-xs font-bold text-purple-400 tracking-wider uppercase flex items-center gap-2">
-                            <i class="fa-solid fa-bolt-lightning"></i> CARD B: ADVANCED 10S SIGNAL
+                            <i class="fa-solid fa-bolt-lightning"></i> ADVANCED 10-SECOND SIGNAL
                         </span>
                         <span id="advTimestamp" class="text-[11px] text-gray-400 font-mono">--:--:--</span>
                     </div>
 
-                    <div class="flex justify-between items-center gap-2 mb-4 border-b border-white/10 pb-3">
-                        <div>
-                            <span id="advDisplayPair" class="font-orbitron font-black text-base text-white block">EUR/USD (OTC)</span>
-                            <span class="text-[11px] text-purple-300">Fixed 10-Second Horizon Engine</span>
-                        </div>
-                        <span id="advExpiryTimer" class="text-xs font-mono text-purple-300 font-bold bg-purple-950/60 px-2 py-1 rounded border border-purple-500/30">10s Expire</span>
-                    </div>
-
                     <div class="text-center my-3 py-4 rounded-xl bg-black/40 border border-white/10 relative">
-                        <div id="advSignalBadge" class="inline-flex items-center justify-center px-4 py-1.5 rounded-lg font-orbitron font-black text-xs uppercase tracking-wider mb-2 bg-gray-800 text-gray-300">
+                        <div id="advSignalBadge" class="inline-flex items-center justify-center px-4 py-1 rounded-lg font-orbitron font-black text-xs uppercase tracking-wider mb-2 bg-gray-800 text-gray-300">
                             STANDBY
                         </div>
                         <div class="flex items-center justify-center gap-3 my-1">
-                            <div id="advSignalArrowIcon" class="text-3xl md:text-5xl"><i class="fa-solid fa-stopwatch text-purple-400"></i></div>
-                            <div id="advSignalDirection" class="font-orbitron text-3xl md:text-5xl font-black tracking-wider text-gray-300">STANDBY</div>
+                            <div id="advSignalArrowIcon" class="text-3xl md:text-4xl"><i class="fa-solid fa-stopwatch text-purple-400"></i></div>
+                            <div id="advSignalDirection" class="font-orbitron text-3xl md:text-4xl font-black tracking-wider text-gray-300">STANDBY</div>
                         </div>
-                        <p id="advSignalSubtext" class="text-xs text-gray-300 font-medium px-3 mt-1">Independent short-term momentum volatility scan.</p>
+                        <p id="advSignalSubtext" class="text-xs text-gray-300 font-medium px-2 mt-1">Independent short-term momentum volatility scan.</p>
                     </div>
 
-                    <div class="grid grid-cols-3 gap-2 mb-4 text-center text-xs">
-                        <div class="bg-black/30 border border-white/10 rounded-lg p-2.5">
+                    <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                        <div class="bg-black/40 border border-white/10 rounded-lg p-2.5">
                             <span class="block text-[10px] text-gray-400 mb-0.5">Entry Price</span>
                             <span id="advMetricPrice" class="font-orbitron font-bold text-purple-200">--</span>
                         </div>
-                        <div class="bg-black/30 border border-white/10 rounded-lg p-2.5">
+                        <div class="bg-black/40 border border-white/10 rounded-lg p-2.5">
                             <span class="block text-[10px] text-gray-400 mb-0.5">Micro-Volatility</span>
                             <span id="advMetricVolatility" class="font-orbitron font-bold text-amber-300">--</span>
                         </div>
-                        <div class="bg-black/30 border border-white/10 rounded-lg p-2.5">
+                        <div class="bg-black/40 border border-white/10 rounded-lg p-2.5">
                             <span class="block text-[10px] text-gray-400 mb-0.5">10s Confidence</span>
                             <span id="advMetricConfidence" class="font-orbitron font-bold text-cyan-300">--</span>
-                        </div>
-                    </div>
-
-                    <div class="bg-black/30 rounded-lg p-3 border border-white/10 text-xs">
-                        <div class="flex justify-between items-center text-gray-300 font-bold mb-1 font-orbitron text-[11px]">
-                            <span>10s Micro-Analysis Reasons</span>
-                        </div>
-                        <div id="advReasonsList" class="text-[11px] text-gray-400 space-y-1">
-                            <div>• Independent order flow &amp; tick volatility checks pending.</div>
                         </div>
                     </div>
                 </div>
@@ -407,7 +384,7 @@
             const timeframe = document.getElementById('timeframeSelect').value;
 
             const loadingBox = document.getElementById('loadingBox');
-            const boardsContainer = document.getElementById('boardsContainer');
+            const resultBoard = document.getElementById('resultBoard');
             const countdownDisplay = document.getElementById('countdownDisplay');
             const loadingTitle = document.getElementById('loadingTitle');
             const loadingStatusText = document.getElementById('loadingStatusText');
@@ -416,10 +393,10 @@
             analyzeButton.disabled = true;
             analyzeButton.classList.add('opacity-60', 'cursor-not-allowed');
 
-            boardsContainer.classList.add('hidden');
+            resultBoard.classList.add('hidden');
             loadingBox.classList.remove('hidden');
 
-            let currentCount = 10; // Exactly 10 seconds countdown
+            let currentCount = 10;
             countdownDisplay.innerHTML = currentCount;
             loadingTitle.textContent = "Analyzing 10-Second Tick Feed...";
             loadingStatusText.textContent = "Connecting to backend server for " + pair + "...";
@@ -450,14 +427,14 @@
                     countdownDisplay.innerHTML = currentCount;
                     if (currentCount === 7) loadingStatusText.textContent = "Fetching live candle & order book metrics...";
                     if (currentCount === 4) loadingStatusText.textContent = "Evaluating EMA, RSI, & MACD indicators...";
-                    if (currentCount === 2) loadingStatusText.textContent = "Locking in accurate dual signals...";
+                    if (currentCount === 2) loadingStatusText.textContent = "Locking in accurate dual signals on unified board...";
                 } else {
                     clearInterval(countdownInterval);
                     countdownInterval = null;
 
                     fetchPromise.finally(() => {
                         loadingBox.classList.add('hidden');
-                        boardsContainer.classList.remove('hidden');
+                        resultBoard.classList.remove('hidden');
 
                         if (fetchError || !apiData) {
                             apiData = generateFallbackAnalysis(broker, pair, timeframe);
@@ -483,18 +460,16 @@
                     direction: trend,
                     price: price,
                     rsi: (Math.random() * 30 + 40).toFixed(1),
-                    macd_status: trend === 'BUY' ? '+Bullish Momentum' : '-Bearish Momentum',
+                    macd_status: trend === 'BUY' ? '+Bullish' : '-Bearish',
                     confidence: Math.floor(Math.random() * 15) + 75,
-                    reasons: ["EMA 8/21 aligned", "RSI in optimal trend zone", "Order flow volume positive"],
                     timestamp: new Date().toLocaleTimeString(),
-                    data_source: "Live Broker Simulator Feed"
+                    data_source: "Live Feed"
                 },
                 advanced_10s_signal: {
                     direction: advTrend,
                     price: price,
                     volatility: (Math.random() * 0.5 + 0.2).toFixed(2) + "%",
                     confidence: Math.floor(Math.random() * 15) + 72,
-                    reasons: ["10s micro-tick spread analyzed", "Order book momentum evaluated"],
                     timestamp: new Date().toLocaleTimeString()
                 }
             };
@@ -509,46 +484,41 @@
             document.getElementById('metricPrice').textContent = sig.price;
             document.getElementById('metricRsi').textContent = sig.rsi + " / " + sig.macd_status;
             document.getElementById('metricConfidence').textContent = sig.confidence + "%";
-            document.getElementById('consensusRate').textContent = sig.data_source || "Live API Feed";
 
             const badge = document.getElementById('signalBadge');
             const dir = document.getElementById('signalDirection');
             const arrow = document.getElementById('signalArrowIcon');
             const sub = document.getElementById('signalSubtext');
-            const box = document.getElementById('resultBox');
-            const reasonsEl = document.getElementById('reasonsList');
-
-            reasonsEl.innerHTML = (sig.reasons || []).map(r => `<div>• ${r}</div>`).join('');
+            const board = document.getElementById('resultBoard');
 
             if (sig.direction === 'BUY') {
-                box.className = "glass-panel rounded-2xl p-6 flex flex-col justify-between relative overflow-hidden transition-all theme-green";
-                badge.className = "inline-flex items-center justify-center px-4 py-1.5 rounded-lg font-orbitron font-black text-xs uppercase tracking-wider mb-2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+                board.className = "glass-panel rounded-2xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden transition-all theme-green";
+                badge.className = "inline-flex items-center justify-center px-4 py-1 rounded-lg font-orbitron font-black text-xs uppercase tracking-wider mb-2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
                 badge.textContent = "STRONG BUY / CALL";
                 arrow.innerHTML = '<i class="fa-solid fa-arrow-up text-emerald-400 animate-bounce"></i>';
-                dir.className = "font-orbitron text-3xl md:text-5xl font-black tracking-wider text-emerald-300";
+                dir.className = "font-orbitron text-3xl md:text-4xl font-black tracking-wider text-emerald-300";
                 dir.textContent = "CALL (UP)";
                 sub.textContent = `Live consensus agrees on upward continuation for ${pair}.`;
             } else if (sig.direction === 'SELL') {
-                box.className = "glass-panel rounded-2xl p-6 flex flex-col justify-between relative overflow-hidden transition-all theme-red";
-                badge.className = "inline-flex items-center justify-center px-4 py-1.5 rounded-lg font-orbitron font-black text-xs uppercase tracking-wider mb-2 bg-rose-500/20 text-rose-300 border border-rose-500/30";
+                board.className = "glass-panel rounded-2xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden transition-all theme-red";
+                badge.className = "inline-flex items-center justify-center px-4 py-1 rounded-lg font-orbitron font-black text-xs uppercase tracking-wider mb-2 bg-rose-500/20 text-rose-300 border border-rose-500/30";
                 badge.textContent = "STRONG SELL / PUT";
                 arrow.innerHTML = '<i class="fa-solid fa-arrow-down text-rose-400 animate-bounce"></i>';
-                dir.className = "font-orbitron text-3xl md:text-5xl font-black tracking-wider text-rose-300";
+                dir.className = "font-orbitron text-3xl md:text-4xl font-black tracking-wider text-rose-300";
                 dir.textContent = "PUT (DOWN)";
                 sub.textContent = `Live consensus agrees on downward pressure for ${pair}.`;
             } else {
-                box.className = "glass-panel rounded-2xl p-6 flex flex-col justify-between relative overflow-hidden transition-all theme-neutral";
-                badge.className = "inline-flex items-center justify-center px-4 py-1.5 rounded-lg font-orbitron font-black text-xs uppercase tracking-wider mb-2 bg-amber-500/20 text-amber-300 border border-amber-500/30";
+                board.className = "glass-panel rounded-2xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden transition-all theme-neutral";
+                badge.className = "inline-flex items-center justify-center px-4 py-1 rounded-lg font-orbitron font-black text-xs uppercase tracking-wider mb-2 bg-amber-500/20 text-amber-300 border border-amber-500/30";
                 badge.textContent = "LIVE DATA UNAVAILABLE / NO TRADE";
                 arrow.innerHTML = '<i class="fa-solid fa-ban text-white"></i>';
-                dir.className = "font-orbitron text-3xl md:text-5xl font-black tracking-wider text-white";
+                dir.className = "font-orbitron text-3xl md:text-4xl font-black tracking-wider text-white";
                 dir.textContent = "NO TRADE";
                 sub.textContent = "Market conditions inconclusive or live data feed stale.";
             }
         }
 
         function renderAdvancedCard(pair, adv) {
-            document.getElementById('advDisplayPair').textContent = pair;
             document.getElementById('advTimestamp').textContent = adv.timestamp || new Date().toLocaleTimeString();
             document.getElementById('advMetricPrice').textContent = adv.price;
             document.getElementById('advMetricVolatility').textContent = adv.volatility;
@@ -558,44 +528,29 @@
             const dir = document.getElementById('advSignalDirection');
             const arrow = document.getElementById('advSignalArrowIcon');
             const sub = document.getElementById('advSignalSubtext');
-            const reasonsEl = document.getElementById('advReasonsList');
-
-            reasonsEl.innerHTML = (adv.reasons || []).map(r => `<div>• ${r}</div>`).join('');
 
             if (adv.direction === 'BUY') {
-                badge.className = "inline-flex items-center justify-center px-4 py-1.5 rounded-lg font-orbitron font-black text-xs uppercase tracking-wider mb-2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+                badge.className = "inline-flex items-center justify-center px-4 py-1 rounded-lg font-orbitron font-black text-xs uppercase tracking-wider mb-2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
                 badge.textContent = "10S ADVANCED CALL";
                 arrow.innerHTML = '<i class="fa-solid fa-arrow-up text-emerald-400 animate-bounce"></i>';
-                dir.className = "font-orbitron text-3xl md:text-5xl font-black tracking-wider text-emerald-300";
+                dir.className = "font-orbitron text-3xl md:text-4xl font-black tracking-wider text-emerald-300";
                 dir.textContent = "CALL (UP)";
                 sub.textContent = "Short-term order flow indicates rapid upward tick breakout.";
             } else if (adv.direction === 'SELL') {
-                badge.className = "inline-flex items-center justify-center px-4 py-1.5 rounded-lg font-orbitron font-black text-xs uppercase tracking-wider mb-2 bg-rose-500/20 text-rose-300 border border-rose-500/30";
+                badge.className = "inline-flex items-center justify-center px-4 py-1 rounded-lg font-orbitron font-black text-xs uppercase tracking-wider mb-2 bg-rose-500/20 text-rose-300 border border-rose-500/30";
                 badge.textContent = "10S ADVANCED PUT";
                 arrow.innerHTML = '<i class="fa-solid fa-arrow-down text-rose-400 animate-bounce"></i>';
-                dir.className = "font-orbitron text-3xl md:text-5xl font-black tracking-wider text-rose-300";
+                dir.className = "font-orbitron text-3xl md:text-4xl font-black tracking-wider text-rose-300";
                 dir.textContent = "PUT (DOWN)";
                 sub.textContent = "Short-term order flow indicates swift downward tick rejection.";
             } else {
-                badge.className = "inline-flex items-center justify-center px-4 py-1.5 rounded-lg font-orbitron font-black text-xs uppercase tracking-wider mb-2 bg-amber-500/20 text-amber-300 border border-amber-500/30";
+                badge.className = "inline-flex items-center justify-center px-4 py-1 rounded-lg font-orbitron font-black text-xs uppercase tracking-wider mb-2 bg-amber-500/20 text-amber-300 border border-amber-500/30";
                 badge.textContent = "10S NO TRADE SETUP";
                 arrow.innerHTML = '<i class="fa-solid fa-ban text-white"></i>';
-                dir.className = "font-orbitron text-3xl md:text-5xl font-black tracking-wider text-white";
+                dir.className = "font-orbitron text-3xl md:text-4xl font-black tracking-wider text-white";
                 dir.textContent = "NO TRADE";
                 sub.textContent = "Insufficient 10s tick separation or price hesitation.";
             }
-
-            let sec = 10;
-            if (advCountdownInterval) clearInterval(advCountdownInterval);
-            advCountdownInterval = setInterval(() => {
-                sec--;
-                if (sec >= 0) {
-                    document.getElementById('advExpiryTimer').textContent = sec + "s Expire";
-                } else {
-                    clearInterval(advCountdownInterval);
-                    document.getElementById('advExpiryTimer').textContent = "Expired";
-                }
-            }, 1000);
         }
 
         window.onload = function() {
