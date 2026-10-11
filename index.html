@@ -212,20 +212,13 @@
                 </div>
             </div>
 
-            <!-- Action Buttons Stack -->
-            <div class="space-y-3 mt-6">
+            <!-- Single Unified Signal Generator Button -->
+            <div class="mt-6">
                 <button id="analyzeButton"
-                        onclick="startAdvancedAnalysis()"
+                        onclick="startCombinedAnalysis()"
                         class="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-orbitron font-black tracking-wider transition-all transform active:scale-95 shadow-lg shadow-cyan-500/25 flex items-center justify-center gap-3 text-base">
                     <i class="fa-solid fa-radar"></i>
-                    DEEP ANALYZE &amp; GENERATE
-                </button>
-
-                <button id="adv10sButton"
-                        onclick="startAdvanced10sSignal()"
-                        class="w-full py-3.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-orbitron font-bold tracking-wider transition-all transform active:scale-95 shadow-lg shadow-purple-500/25 flex items-center justify-center gap-3 text-sm">
-                    <i class="fa-solid fa-bolt text-amber-300"></i>
-                    ADVANCED 10 SEC SIGNAL
+                    GENERATE SIGNALS
                 </button>
             </div>
         </div>
@@ -385,7 +378,7 @@
                         </div>
                     </div>
                     <p id="advSignalSubtext" class="text-xs md:text-sm text-gray-200 font-medium px-4 mt-2">
-                        Click 'ADVANCED 10 SEC SIGNAL' to isolate next-candle micro-volatility and order flow.
+                        Click 'GENERATE SIGNALS' to simultaneously run live and advanced 10-second scans.
                     </p>
                 </div>
 
@@ -552,7 +545,7 @@
             return { direction, buyScore, sellScore, confirmations, data };
         }
 
-        function startAdvancedAnalysis() {
+        function startCombinedAnalysis() {
             if (analysisRunning) return;
             analysisRunning = true;
 
@@ -562,6 +555,7 @@
 
             const loadingBox = document.getElementById('loadingBox');
             const resultBox = document.getElementById('resultBox');
+            const advResultBox = document.getElementById('advResultBox');
             const countdownDisplay = document.getElementById('countdownDisplay');
             const loadingTitle = document.getElementById('loadingTitle');
             const loadingStatusText = document.getElementById('loadingStatusText');
@@ -571,6 +565,7 @@
             analyzeButton.classList.add('opacity-60', 'cursor-not-allowed');
 
             resultBox.classList.add('hidden');
+            advResultBox.classList.add('hidden');
             loadingBox.classList.remove('hidden');
 
             const marketData = generateMarketData();
@@ -591,27 +586,32 @@
                     countdownDisplay.innerHTML = currentCount;
                     countdownDisplay.className = "font-orbitron text-4xl font-black text-cyan-400 flex items-center justify-center";
                 } else if (currentCount >= 1) {
-                    loadingTitle.textContent = "FINAL SIGNAL VECTOR:";
+                    loadingTitle.textContent = "FINAL SIGNAL VECTORS:";
                     if (cachedSignalType === 'BUY') {
                         countdownDisplay.innerHTML = '<i class="fa-solid fa-arrow-up text-emerald-400 text-6xl md:text-7xl final-arrow"></i>';
                         countdownDisplay.className = "font-orbitron text-4xl font-black flex items-center justify-center";
-                        loadingStatusText.textContent = "BUY / CALL CONFIRMED — " + currentCount + "s";
+                        loadingStatusText.textContent = "PROCESSING LIVE & 10S SIGNALS — " + currentCount + "s";
                     } else if (cachedSignalType === 'SELL') {
                         countdownDisplay.innerHTML = '<i class="fa-solid fa-arrow-down text-rose-400 text-6xl md:text-7xl final-arrow"></i>';
                         countdownDisplay.className = "font-orbitron text-4xl font-black flex items-center justify-center";
-                        loadingStatusText.textContent = "SELL / PUT CONFIRMED — " + currentCount + "s";
+                        loadingStatusText.textContent = "PROCESSING LIVE & 10S SIGNALS — " + currentCount + "s";
                     } else {
                         countdownDisplay.innerHTML = '<div class="no-trade-final flex flex-col items-center justify-center"><i class="fa-solid fa-ban text-white text-5xl"></i><span class="text-white text-xs font-orbitron mt-1">NO TRADE</span></div>';
                         countdownDisplay.className = "font-orbitron text-4xl font-black flex items-center justify-center";
-                        loadingStatusText.textContent = "LIVE DATA UNAVAILABLE / NO TRADE SETUP";
+                        loadingStatusText.textContent = "VALIDATING MARKET CONDITIONS...";
                     }
                 } else {
                     clearInterval(countdownInterval);
                     countdownInterval = null;
                     loadingBox.classList.add('hidden');
                     resultBox.classList.remove('hidden');
+                    advResultBox.classList.remove('hidden');
 
+                    // Finalize Live Signal Card
                     finalizeSignalOutput(broker, pair, timeframe, currentAnalysis);
+
+                    // Simultaneously Generate Advanced 10-Second Signal Card
+                    generateAdvanced10sCard(pair, marketData);
 
                     analysisRunning = false;
                     analyzeButton.disabled = false;
@@ -620,8 +620,7 @@
             }, 1000);
         }
 
-        function startAdvanced10sSignal() {
-            const pair = document.getElementById('pairSelect').value;
+        function generateAdvanced10sCard(pair, tickData) {
             const advDisplayPair = document.getElementById('advDisplayPair');
             const advTimestamp = document.getElementById('advTimestamp');
             const advSignalBadge = document.getElementById('advSignalBadge');
@@ -637,8 +636,6 @@
             const now = new Date();
             advTimestamp.textContent = now.toLocaleTimeString();
 
-            // Independent 10s tick engine analysis
-            const tickData = generateMarketData();
             const advScoreBuy = Math.floor(Math.random() * 40) + 55;
             const advScoreSell = Math.floor(Math.random() * 40) + 55;
             let advDirection = "NOTRADE";
@@ -678,7 +675,6 @@
                 advMetricConfidence.textContent = "50% Neutral";
             }
 
-            // Countdown timer simulation for 10s expiry
             let remainingSec = 10;
             if (advCountdownInterval) clearInterval(advCountdownInterval);
             advCountdownInterval = setInterval(() => {
@@ -795,7 +791,7 @@
 
         window.onload = function() {
             updatePairs();
-            renderNeutralState("Select pair & timeframe and click analyze.");
+            renderNeutralState("Select pair & timeframe and click 'GENERATE SIGNALS'.");
         };
 
         window.addEventListener('beforeunload', function() {
