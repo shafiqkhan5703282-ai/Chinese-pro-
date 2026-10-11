@@ -206,15 +206,15 @@
         <!-- Right Column: Unified Single Board Container -->
         <div class="lg:col-span-2 flex flex-col gap-6">
 
-            <!-- Loading Box (10s Countdown) -->
+            <!-- Loading Box (5s to 1s Countdown) -->
             <div id="loadingBox" class="glass-panel rounded-2xl p-8 flex flex-col items-center justify-center min-h-[440px] text-center hidden">
                 <div class="relative w-32 h-32 mb-6 flex items-center justify-center">
                     <div class="absolute inset-0 rounded-full border-4 border-cyan-500/20 animate-ping"></div>
                     <div class="absolute inset-0 rounded-full border-4 border-t-cyan-400 border-r-transparent border-b-blue-600 border-l-transparent animate-spin"></div>
-                    <div id="countdownDisplay" class="font-orbitron text-5xl font-black text-cyan-400 flex items-center justify-center">10</div>
+                    <div id="countdownDisplay" class="font-orbitron text-5xl font-black text-cyan-400 flex items-center justify-center">5</div>
                 </div>
-                <h3 id="loadingTitle" class="font-orbitron text-lg font-bold text-gray-200 mb-2">Analyzing 10-Second Tick Feed...</h3>
-                <p id="loadingStatusText" class="text-xs text-gray-400 max-w-sm">Gathering live market data and calculating precise multi-indicator consensus...</p>
+                <h3 id="loadingTitle" class="font-orbitron text-lg font-bold text-gray-200 mb-2">Analyzing Tick Feed...</h3>
+                <p id="loadingStatusText" class="text-xs text-gray-400 max-w-sm">Gathering live market data and calculating precise indicator consensus...</p>
             </div>
 
             <!-- UNIFIED RESULT BOARD -->
@@ -396,9 +396,9 @@
             resultBoard.classList.add('hidden');
             loadingBox.classList.remove('hidden');
 
-            let currentCount = 10;
+            let currentCount = 5; // 5 seconds to 1 second countdown
             countdownDisplay.innerHTML = currentCount;
-            loadingTitle.textContent = "Analyzing 10-Second Tick Feed...";
+            loadingTitle.textContent = "Analyzing Tick Feed...";
             loadingStatusText.textContent = "Connecting to backend server for " + pair + "...";
 
             if (countdownInterval) clearInterval(countdownInterval);
@@ -425,9 +425,8 @@
                 currentCount--;
                 if (currentCount >= 1) {
                     countdownDisplay.innerHTML = currentCount;
-                    if (currentCount === 7) loadingStatusText.textContent = "Fetching live candle & order book metrics...";
-                    if (currentCount === 4) loadingStatusText.textContent = "Evaluating EMA, RSI, & MACD indicators...";
-                    if (currentCount === 2) loadingStatusText.textContent = "Locking in accurate dual signals on unified board...";
+                    if (currentCount === 3) loadingStatusText.textContent = "Evaluating EMA, RSI, & MACD indicators...";
+                    if (currentCount === 1) loadingStatusText.textContent = "Locking in accurate dual signals on unified board...";
                 } else {
                     clearInterval(countdownInterval);
                     countdownInterval = null;
