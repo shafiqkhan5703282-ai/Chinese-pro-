@@ -90,7 +90,7 @@
                     QUANTUM AI PRO SCANNER
                 </h1>
                 <p class="text-xs text-gray-400">
-                    Next-Level Institutional Expert Consensus Engine v7.0
+                    Next-Level Institutional Expert Consensus Engine v7.1 (Real-Data Stream)
                 </p>
             </div>
         </div>
@@ -204,8 +204,8 @@
                     <div class="absolute inset-0 rounded-full border-4 border-t-cyan-400 border-r-transparent border-b-blue-600 border-l-transparent animate-spin"></div>
                     <div id="countdownDisplay" class="font-orbitron text-5xl font-black text-cyan-400 flex items-center justify-center">3</div>
                 </div>
-                <h3 id="loadingTitle" class="font-orbitron text-lg font-bold text-gray-200 mb-2">Analyzing Pocket Option Expert Feeds...</h3>
-                <p id="loadingStatusText" class="text-xs text-gray-400 max-w-sm">Synthesizing real-time expert consensus for Live, Mid, and Advanced vectors...</p>
+                <h3 id="loadingTitle" class="font-orbitron text-lg font-bold text-gray-200 mb-2">Fetching Live OHLC Feeds...</h3>
+                <p id="loadingStatusText" class="text-xs text-gray-400 max-w-sm">Evaluating multi-indicator consensus and strict filter thresholds...</p>
             </div>
 
             <!-- UNIFIED COMPACT RESULT BOARD (3 SIGNALS IN ONE BOARD) -->
@@ -283,7 +283,7 @@
                             <div class="flex justify-between"><span>Volatility:</span> <strong id="advVolatility" class="text-amber-300">--</strong></div>
                             <div class="flex justify-between"><span>Confidence:</span> <strong id="advConf" class="text-cyan-300">--</strong></div>
                             <div class="flex justify-between bg-emerald-950/30 px-1 rounded border border-emerald-500/30">
-                                <span class="text-emerald-300 font-bold">Suggestion:</span> 
+                                <span class="text-emerald-300 font-bold">Signal Score:</span> 
                                 <strong id="advSuggestion" class="text-emerald-400">--%</strong>
                             </div>
                         </div>
@@ -380,8 +380,8 @@
 
             let currentCount = 3;
             countdownDisplay.innerHTML = currentCount;
-            loadingTitle.textContent = "Syncing with Pocket Option Feeds...";
-            loadingStatusText.textContent = "Analyzing " + pair + " (" + timeframe + ") across expert models...";
+            loadingTitle.textContent = "Connecting to Backend Feeds...";
+            loadingStatusText.textContent = "Fetching OHLC candlestick data for " + pair + " (" + timeframe + ")...";
 
             if (countdownInterval) clearInterval(countdownInterval);
 
@@ -399,7 +399,7 @@
             })
             .then(data => { apiData = data; })
             .catch(err => {
-                console.warn("Backend connection failed, using Pocket Option expert simulator:", err);
+                console.warn("Backend connection failed:", err);
                 fetchError = true;
             });
 
@@ -407,8 +407,8 @@
                 currentCount--;
                 if (currentCount >= 1) {
                     countdownDisplay.innerHTML = currentCount;
-                    if (currentCount === 2) loadingStatusText.textContent = "Consulting expert indicators & order book consensus...";
-                    if (currentCount === 1) loadingStatusText.textContent = "Locking in Live, Mid, and Advanced signals...";
+                    if (currentCount === 2) loadingStatusText.textContent = "Processing EMA 9/21/50, RSI 14, MACD, & ATR...";
+                    if (currentCount === 1) loadingStatusText.textContent = "Applying strict confidence threshold filtering...";
                 } else {
                     clearInterval(countdownInterval);
                     countdownInterval = null;
@@ -418,10 +418,11 @@
                         resultBoard.classList.remove('hidden');
 
                         if (fetchError || !apiData) {
-                            apiData = generatePocketOptionExpertAnalysis(broker, pair, timeframe);
+                            // Enforce strict protection: no fake simulation data if backend is unreachable
+                            renderNoLiveData();
+                        } else {
+                            renderAllThreeSignals(broker, pair, timeframe, apiData);
                         }
-
-                        renderAllThreeSignals(broker, pair, timeframe, apiData);
 
                         analysisRunning = false;
                         analyzeButton.disabled = false;
@@ -431,39 +432,33 @@
             }, 1000);
         }
 
-        function generatePocketOptionExpertAnalysis(broker, pair, timeframe) {
-            // High-precision expert consensus simulation matching Pocket Option live feeds
-            const liveTrend = Math.random() > 0.42 ? 'BUY' : 'SELL';
-            const midTrend = Math.random() > 0.45 ? 'BUY' : 'SELL';
-            const advTrend = Math.random() > 0.40 ? 'BUY' : 'SELL';
+        function renderNoLiveData() {
+            document.getElementById('displayId').textContent = "#ERR-OFFLINE";
             
-            const price = (1.0850 + (Math.random() * 0.0060 - 0.0030)).toFixed(5);
-            const timeStr = new Date().toLocaleTimeString();
+            ['live', 'mid', 'adv'].forEach(type => {
+                document.getElementById(`${type}Timestamp`).textContent = "--:--";
+                const badge = document.getElementById(`${type}Badge`);
+                const dir = document.getElementById(`${type}Dir`);
+                const arrow = document.getElementById(`${type}Arrow`);
 
-            return {
-                live_signal: {
-                    direction: liveTrend,
-                    price: price,
-                    rsi: (Math.random() * 22 + 48).toFixed(1),
-                    macd_status: liveTrend === 'BUY' ? '+Bullish Flow' : '-Bearish Flow',
-                    confidence: Math.floor(Math.random() * 8) + 91,
-                    timestamp: timeStr
-                },
-                mid_signal: {
-                    direction: midTrend,
-                    trend_bias: midTrend === 'BUY' ? 'Strong Bullish' : 'Strong Bearish',
-                    momentum: midTrend === 'BUY' ? 'Ascending' : 'Descending',
-                    confidence: Math.floor(Math.random() * 8) + 92,
-                    timestamp: timeStr
-                },
-                advanced_10s_signal: {
-                    direction: advTrend,
-                    volatility: (Math.random() * 0.3 + 0.4).toFixed(2) + "%",
-                    confidence: Math.floor(Math.random() * 6) + 94,
-                    suggestion_rate: Math.floor(Math.random() * 5) + 95, // 95% to 99% expert suggestion
-                    timestamp: timeStr
-                }
-            };
+                badge.className = "inline-block px-2 py-0.5 rounded font-orbitron font-bold text-[10px] uppercase mb-1 bg-amber-500/20 text-amber-300 border border-amber-500/30";
+                badge.textContent = "OFFLINE";
+                arrow.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-amber-400"></i>';
+                dir.className = "font-orbitron text-xs font-bold text-amber-400";
+                dir.textContent = "NO LIVE DATA — SIGNAL DISABLED";
+            });
+
+            document.getElementById('livePrice').textContent = "Unavailable";
+            document.getElementById('liveRsi').textContent = "N/A";
+            document.getElementById('liveConf').textContent = "0%";
+
+            document.getElementById('midTrend').textContent = "N/A";
+            document.getElementById('midMomentum').textContent = "N/A";
+            document.getElementById('midConf').textContent = "0%";
+
+            document.getElementById('advVolatility').textContent = "N/A";
+            document.getElementById('advConf').textContent = "0%";
+            document.getElementById('advSuggestion').textContent = "0%";
         }
 
         function renderAllThreeSignals(broker, pair, timeframe, data) {
@@ -475,76 +470,56 @@
             // 1. LIVE SIGNAL RENDER
             const live = data.live_signal || {};
             document.getElementById('liveTimestamp').textContent = live.timestamp || new Date().toLocaleTimeString();
-            document.getElementById('livePrice').textContent = live.price || "1.08500";
-            document.getElementById('liveRsi').textContent = (live.rsi || "52") + " / " + (live.macd_status || "+Bullish");
-            document.getElementById('liveConf').textContent = (live.confidence || "92") + "%";
+            document.getElementById('livePrice').textContent = live.price || "--";
+            document.getElementById('liveRsi').textContent = (live.rsi || "--") + " / " + (live.macd_status || "--");
+            document.getElementById('liveConf').textContent = (live.confidence || "0") + "%";
             
-            const liveBadge = document.getElementById('liveBadge');
-            const liveDir = document.getElementById('liveDir');
-            const liveArrow = document.getElementById('liveArrow');
-
-            if (live.direction === 'BUY') {
-                liveBadge.className = "inline-block px-2 py-0.5 rounded font-orbitron font-bold text-[10px] uppercase mb-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
-                liveBadge.textContent = "CALL";
-                liveArrow.innerHTML = '<i class="fa-solid fa-arrow-up text-emerald-400"></i>';
-                liveDir.className = "font-orbitron text-base font-black tracking-wider text-emerald-300";
-                liveDir.textContent = "CALL (UP)";
-            } else {
-                liveBadge.className = "inline-block px-2 py-0.5 rounded font-orbitron font-bold text-[10px] uppercase mb-1 bg-rose-500/20 text-rose-300 border border-rose-500/30";
-                liveBadge.textContent = "PUT";
-                liveArrow.innerHTML = '<i class="fa-solid fa-arrow-down text-rose-400"></i>';
-                liveDir.className = "font-orbitron text-base font-black tracking-wider text-rose-300";
-                liveDir.textContent = "PUT (DOWN)";
-            }
+            renderSignalCard('live', live);
 
             // 2. MID SIGNAL RENDER
-            const mid = data.mid_signal || data.live_signal || {};
+            const mid = data.mid_signal || {};
             document.getElementById('midTimestamp').textContent = mid.timestamp || new Date().toLocaleTimeString();
-            document.getElementById('midTrend').textContent = mid.trend_bias || (mid.direction === 'BUY' ? 'Strong Bullish' : 'Strong Bearish');
-            document.getElementById('midMomentum').textContent = mid.momentum || 'Ascending';
-            document.getElementById('midConf').textContent = (mid.confidence || "93") + "%";
+            document.getElementById('midTrend').textContent = mid.trend_bias || "--";
+            document.getElementById('midMomentum').textContent = mid.momentum || "--";
+            document.getElementById('midConf').textContent = (mid.confidence || "0") + "%";
 
-            const midBadge = document.getElementById('midBadge');
-            const midDir = document.getElementById('midDir');
-            const midArrow = document.getElementById('midArrow');
-
-            if (mid.direction === 'BUY') {
-                midBadge.className = "inline-block px-2 py-0.5 rounded font-orbitron font-bold text-[10px] uppercase mb-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
-                midBadge.textContent = "CALL";
-                midArrow.innerHTML = '<i class="fa-solid fa-arrow-up text-emerald-400"></i>';
-                midDir.className = "font-orbitron text-base font-black tracking-wider text-emerald-300";
-                midDir.textContent = "CALL (UP)";
-            } else {
-                midBadge.className = "inline-block px-2 py-0.5 rounded font-orbitron font-bold text-[10px] uppercase mb-1 bg-rose-500/20 text-rose-300 border border-rose-500/30";
-                midBadge.textContent = "PUT";
-                midArrow.innerHTML = '<i class="fa-solid fa-arrow-down text-rose-400"></i>';
-                midDir.className = "font-orbitron text-base font-black tracking-wider text-rose-300";
-                midDir.textContent = "PUT (DOWN)";
-            }
+            renderSignalCard('mid', mid);
 
             // 3. ADVANCED SIGNAL RENDER
-            const adv = data.advanced_10s_signal || data.live_signal || {};
+            const adv = data.advanced_10s_signal || {};
             document.getElementById('advTimestamp').textContent = adv.timestamp || new Date().toLocaleTimeString();
-            document.getElementById('advVolatility').textContent = adv.volatility || "0.45%";
-            document.getElementById('advConf').textContent = (adv.confidence || "95") + "%";
-            document.getElementById('advSuggestion').textContent = (adv.suggestion_rate || "97") + "% Success";
+            document.getElementById('advVolatility').textContent = adv.volatility || "--";
+            document.getElementById('advConf').textContent = (adv.confidence || "0") + "%";
+            document.getElementById('advSuggestion').textContent = (adv.signal_score || "0") + "%";
 
-            const advBadge = document.getElementById('advBadge');
-            const advDir = document.getElementById('advDir');
-            const advArrow = document.getElementById('advArrow');
+            renderSignalCard('adv', adv);
+        }
 
-            if (adv.direction === 'BUY') {
-                advBadge.className = "inline-block px-2 py-0.5 rounded font-orbitron font-bold text-[10px] uppercase mb-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
-                advBadge.textContent = "CALL";
-                advArrow.innerHTML = '<i class="fa-solid fa-arrow-up text-emerald-400"></i>';
-                advDir.className = "font-orbitron text-base font-black tracking-wider text-emerald-300";
-                advDir.textContent = "CALL (UP)";
+        function renderSignalCard(prefix, sig) {
+            const badge = document.getElementById(`${prefix}Badge`);
+            const dir = document.getElementById(`${prefix}Dir`);
+            const arrow = document.getElementById(`${prefix}Arrow`);
+
+            const direction = sig.direction || 'NO TRADE';
+
+            if (direction === 'CALL' || direction === 'BUY') {
+                badge.className = "inline-block px-2 py-0.5 rounded font-orbitron font-bold text-[10px] uppercase mb-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+                badge.textContent = "CALL";
+                arrow.innerHTML = '<i class="fa-solid fa-arrow-up text-emerald-400"></i>';
+                dir.className = "font-orbitron text-base font-black tracking-wider text-emerald-300";
+                dir.textContent = "CALL (UP)";
+            } else if (direction === 'PUT' || direction === 'SELL') {
+                badge.className = "inline-block px-2 py-0.5 rounded font-orbitron font-bold text-[10px] uppercase mb-1 bg-rose-500/20 text-rose-300 border border-rose-500/30";
+                badge.textContent = "PUT";
+                arrow.innerHTML = '<i class="fa-solid fa-arrow-down text-rose-400"></i>';
+                dir.className = "font-orbitron text-base font-black tracking-wider text-rose-300";
+                dir.textContent = "PUT (DOWN)";
             } else {
-                advBadge.className = "inline-block px-2 py-0.5 rounded font-orbitron font-bold text-[10px] uppercase mb-1 bg-rose-500/20 text-rose-300 border border-rose-500/30";
-                advBadge.textContent = "PUT";
-                advArrow.innerHTML = '<i class="fa-solid fa-arrow-down text-rose-400"></i>';
-                advDir.className = "font-orbitron text-base font-black tracking-wider text-rose-300";
-                advDir.textContent = "PUT (DOWN)";
+                badge.className = "inline-block px-2 py-0.5 rounded font-orbitron font-bold text-[10px] uppercase mb-1 bg-amber-500/20 text-amber-300 border border-amber-500/30";
+                badge.textContent = "HOLD";
+                arrow.innerHTML = '<i class="fa-solid fa-ban text-amber-400"></i>';
+                dir.className = "font-orbitron text-sm font-black tracking-wider text-amber-300";
+                dir.textContent = "NO TRADE";
             }
         }
 
