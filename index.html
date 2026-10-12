@@ -90,7 +90,7 @@
                     QUANTUM AI PRO SCANNER
                 </h1>
                 <p class="text-xs text-gray-400">
-                    Next-Level Institutional Expert Consensus Engine v7.1 (Real-Data Stream)
+                    Next-Level Institutional Expert Consensus Engine v7.1
                 </p>
             </div>
         </div>
@@ -204,8 +204,8 @@
                     <div class="absolute inset-0 rounded-full border-4 border-t-cyan-400 border-r-transparent border-b-blue-600 border-l-transparent animate-spin"></div>
                     <div id="countdownDisplay" class="font-orbitron text-5xl font-black text-cyan-400 flex items-center justify-center">3</div>
                 </div>
-                <h3 id="loadingTitle" class="font-orbitron text-lg font-bold text-gray-200 mb-2">Fetching Live OHLC Feeds...</h3>
-                <p id="loadingStatusText" class="text-xs text-gray-400 max-w-sm">Evaluating multi-indicator consensus and strict filter thresholds...</p>
+                <h3 id="loadingTitle" class="font-orbitron text-lg font-bold text-gray-200 mb-2">Analyzing Feeds via Python Backend...</h3>
+                <p id="loadingStatusText" class="text-xs text-gray-400 max-w-sm">Processing real-time indicator consensus and filtering...</p>
             </div>
 
             <!-- UNIFIED COMPACT RESULT BOARD (3 SIGNALS IN ONE BOARD) -->
@@ -266,7 +266,7 @@
                         </div>
                     </div>
 
-                    <!-- 3. ADVANCED SIGNAL (WITH SUGGESTION %) -->
+                    <!-- 3. ADVANCED SIGNAL -->
                     <div class="bg-black/40 rounded-xl p-3 border border-purple-500/40 flex flex-col justify-between">
                         <div class="flex justify-between items-center border-b border-purple-500/20 pb-1.5 mb-2">
                             <span class="font-orbitron text-[11px] font-bold text-purple-400 uppercase">Advanced (10s)</span>
@@ -381,7 +381,7 @@
             let currentCount = 3;
             countdownDisplay.innerHTML = currentCount;
             loadingTitle.textContent = "Connecting to Backend Feeds...";
-            loadingStatusText.textContent = "Fetching OHLC candlestick data for " + pair + " (" + timeframe + ")...";
+            loadingStatusText.textContent = "Fetching indicators for " + pair + " (" + timeframe + ")...";
 
             if (countdownInterval) clearInterval(countdownInterval);
 
@@ -407,8 +407,8 @@
                 currentCount--;
                 if (currentCount >= 1) {
                     countdownDisplay.innerHTML = currentCount;
-                    if (currentCount === 2) loadingStatusText.textContent = "Processing EMA 9/21/50, RSI 14, MACD, & ATR...";
-                    if (currentCount === 1) loadingStatusText.textContent = "Applying strict confidence threshold filtering...";
+                    if (currentCount === 2) loadingStatusText.textContent = "Processing technical indicators & price action...";
+                    if (currentCount === 1) loadingStatusText.textContent = "Finalizing live trading signals...";
                 } else {
                     clearInterval(countdownInterval);
                     countdownInterval = null;
@@ -418,7 +418,6 @@
                         resultBoard.classList.remove('hidden');
 
                         if (fetchError || !apiData) {
-                            // Enforce strict protection: no fake simulation data if backend is unreachable
                             renderNoLiveData();
                         } else {
                             renderAllThreeSignals(broker, pair, timeframe, apiData);
@@ -473,7 +472,6 @@
             document.getElementById('livePrice').textContent = live.price || "--";
             document.getElementById('liveRsi').textContent = (live.rsi || "--") + " / " + (live.macd_status || "--");
             document.getElementById('liveConf').textContent = (live.confidence || "0") + "%";
-            
             renderSignalCard('live', live);
 
             // 2. MID SIGNAL RENDER
@@ -482,7 +480,6 @@
             document.getElementById('midTrend').textContent = mid.trend_bias || "--";
             document.getElementById('midMomentum').textContent = mid.momentum || "--";
             document.getElementById('midConf').textContent = (mid.confidence || "0") + "%";
-
             renderSignalCard('mid', mid);
 
             // 3. ADVANCED SIGNAL RENDER
@@ -491,7 +488,6 @@
             document.getElementById('advVolatility').textContent = adv.volatility || "--";
             document.getElementById('advConf').textContent = (adv.confidence || "0") + "%";
             document.getElementById('advSuggestion').textContent = (adv.signal_score || "0") + "%";
-
             renderSignalCard('adv', adv);
         }
 
@@ -500,7 +496,7 @@
             const dir = document.getElementById(`${prefix}Dir`);
             const arrow = document.getElementById(`${prefix}Arrow`);
 
-            const direction = sig.direction || 'NO TRADE';
+            const direction = sig.direction || 'CALL';
 
             if (direction === 'CALL' || direction === 'BUY') {
                 badge.className = "inline-block px-2 py-0.5 rounded font-orbitron font-bold text-[10px] uppercase mb-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
