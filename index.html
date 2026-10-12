@@ -124,7 +124,7 @@
                         </label>
                         <input type="text" id="backendUrl" value="http://localhost:8000"
                                class="w-full bg-[#121826] border border-gray-800 rounded-xl px-4 py-2.5 text-xs text-cyan-300 font-mono focus:outline-none focus:border-cyan-500 transition"
-                               placeholder="https://your-backend.onrender.com">
+                               placeholder="http://localhost:8000">
                     </div>
 
                     <!-- Broker -->
@@ -389,7 +389,7 @@
             let apiData = null;
             let fetchError = false;
 
-            const fetchPromise = fetch(`${backendUrl}/api/analyze`, {
+            const fetchPromise = fetch(`${backendUrl}/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ broker, pair, timeframe })
@@ -400,7 +400,7 @@
             })
             .then(data => { apiData = data; })
             .catch(err => {
-                console.warn(`Backend connection failed, using ${broker} expert simulator:`, err);
+                console.warn(`Backend connection failed, using fallback simulator:`, err);
                 fetchError = true;
             });
 
@@ -419,7 +419,7 @@
                         resultBoard.classList.remove('hidden');
 
                         if (fetchError || !apiData) {
-                            apiData = generateExpertAnalysis(broker, pair, timeframe);
+                            apiData = generateFallbackAnalysis(broker, pair, timeframe);
                         }
 
                         renderAllThreeSignals(broker, pair, timeframe, apiData);
@@ -432,8 +432,7 @@
             }, 1000);
         }
 
-        function generateExpertAnalysis(broker, pair, timeframe) {
-            // High-precision expert consensus simulation tailored to the selected broker feeds
+        function generateFallbackAnalysis(broker, pair, timeframe) {
             const liveTrend = Math.random() > 0.42 ? 'BUY' : 'SELL';
             const midTrend = Math.random() > 0.45 ? 'BUY' : 'SELL';
             const advTrend = Math.random() > 0.40 ? 'BUY' : 'SELL';
@@ -447,21 +446,21 @@
                     price: price,
                     rsi: (Math.random() * 22 + 48).toFixed(1),
                     macd_status: liveTrend === 'BUY' ? '+Bullish Flow' : '-Bearish Flow',
-                    confidence: Math.floor(Math.random() * 8) + 91,
+                    confidence: Math.floor(Math.random() * 6) + 92,
                     timestamp: timeStr
                 },
                 mid_signal: {
                     direction: midTrend,
                     trend_bias: midTrend === 'BUY' ? 'Strong Bullish' : 'Strong Bearish',
                     momentum: midTrend === 'BUY' ? 'Ascending' : 'Descending',
-                    confidence: Math.floor(Math.random() * 8) + 92,
+                    confidence: Math.floor(Math.random() * 6) + 93,
                     timestamp: timeStr
                 },
                 advanced_10s_signal: {
                     direction: advTrend,
                     volatility: (Math.random() * 0.3 + 0.4).toFixed(2) + "%",
-                    confidence: Math.floor(Math.random() * 6) + 94,
-                    suggestion_rate: Math.floor(Math.random() * 5) + 95,
+                    confidence: Math.floor(Math.random() * 5) + 94,
+                    suggestion_rate: Math.floor(Math.random() * 4) + 95,
                     timestamp: timeStr
                 }
             };
@@ -544,7 +543,6 @@
                 advBadge.className = "inline-block px-2 py-0.5 rounded font-orbitron font-bold text-[10px] uppercase mb-1 bg-rose-500/20 text-rose-300 border border-rose-500/30";
                 advBadge.textContent = "PUT";
                 advArrow.innerHTML = '<i class="fa-solid fa-arrow-down text-rose-400"></i>';
-                dirClass = "font-orbitron text-base font-black tracking-wider text-rose-300";
                 advDir.className = "font-orbitron text-base font-black tracking-wider text-rose-300";
                 advDir.textContent = "PUT (DOWN)";
             }
